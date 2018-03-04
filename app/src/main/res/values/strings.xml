@@ -1,0 +1,7 @@
+<resources>
+    <string name="app_name">Baking Time</string>
+    <string name="card_background_image_description">Card background for the recipe displaying default or specific image</string>
+    <string name="servings_label">Servings:</string>
+    <string name="steps_label">Steps:</string>
+    <string name="ingredients_label">Ingredients:</string>
+</resources>
