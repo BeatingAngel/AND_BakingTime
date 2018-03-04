@@ -7,6 +7,11 @@ import android.os.Bundle;
 import android.support.v7.widget.GridLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.util.Log;
+import android.view.View;
+import android.view.animation.Animation;
+import android.view.animation.LinearInterpolator;
+import android.view.animation.RotateAnimation;
+import android.widget.ImageView;
 
 import com.goldencrow.android.bakingtime.endpoints.RecipeEndpointInterface;
 import com.goldencrow.android.bakingtime.entities.Recipe;
@@ -21,6 +26,7 @@ public class MainActivity extends AppCompatActivity {
     private final String TAG = this.getClass().getSimpleName();
 
     private RecyclerView mRecipeListRv;
+    private ImageView mLoadingIndicatorIv;
 
     private RecipeAdapter mAdapter;
     private GridLayoutManager layoutManager;
@@ -33,7 +39,12 @@ public class MainActivity extends AppCompatActivity {
         setContentView(R.layout.activity_main);
 
         mRecipeListRv = findViewById(R.id.recipe_list_rv);
+        mLoadingIndicatorIv = findViewById(R.id.loading_indicator_iv);
 
+        // make the donut symbol rotate like a loading indicator
+        addSpinningEffectToLoader();
+
+        // setting up the RecyclerListView
         int gridLayoutDefaultSpanCount = 1;
         layoutManager = new GridLayoutManager(this, gridLayoutDefaultSpanCount);
 
@@ -45,12 +56,14 @@ public class MainActivity extends AppCompatActivity {
         mRecipeListRv.setHasFixedSize(true);
         mRecipeListRv.setAdapter(mAdapter);
 
+        // getting all the data from the network and set it to the adapter.
         mRecipeEndpoint = NetworkUtil.getClient().create(RecipeEndpointInterface.class);
 
         Call<Recipe[]> recipeCall = mRecipeEndpoint.doGetRecipes();
         recipeCall.enqueue(new Callback<Recipe[]>() {
             @Override
             public void onResponse(Call<Recipe[]> call, Response<Recipe[]> response) {
+                removeLoadingIndicator();
                 mAdapter.setRecipes(response.body());
             }
 
@@ -90,5 +103,19 @@ public class MainActivity extends AppCompatActivity {
                 layoutManager.setSpanCount(mediumSpanCount);
             }
         }
+    }
+
+    private void addSpinningEffectToLoader() {
+        RotateAnimation rotate = new RotateAnimation(0, 180, Animation.RELATIVE_TO_SELF, 0.5f, Animation.RELATIVE_TO_SELF, 0.5f);
+        rotate.setDuration(1000);
+        rotate.setRepeatCount(Animation.INFINITE);
+        rotate.setInterpolator(new LinearInterpolator());
+
+        mLoadingIndicatorIv.startAnimation(rotate);
+    }
+
+    private void removeLoadingIndicator() {
+        mLoadingIndicatorIv.clearAnimation();
+        mLoadingIndicatorIv.setVisibility(View.INVISIBLE);
     }
 }

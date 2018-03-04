@@ -4,8 +4,19 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:background="@color/cardListBackground"
+    android:background="@drawable/table_surface"
     tools:context="com.goldencrow.android.bakingtime.MainActivity">
+
+    <ImageView
+        android:id="@+id/loading_indicator_iv"
+        android:layout_width="70dp"
+        android:layout_height="70dp"
+        android:contentDescription="Loading Indicator Logo"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="parent"
+        app:srcCompat="@drawable/donut" />
 
     <android.support.v7.widget.RecyclerView
         android:id="@+id/recipe_list_rv"

@@ -11,6 +11,7 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.view.animation.AccelerateDecelerateInterpolator;
 import android.view.animation.DecelerateInterpolator;
+import android.widget.Button;
 import android.widget.ImageView;
 import android.widget.TextView;
 
@@ -48,12 +49,12 @@ public class RecipeAdapter extends RecyclerView.Adapter<RecipeAdapter.RecipeView
             Picasso.with(mContext)
                     .load(recipe.getImage())
                     .into(holder.mBackgroundImage);
+        } else {
+            holder.mErrorTv.setVisibility(View.VISIBLE);
         }
         holder.mTitleTv.setText(recipe.getName());
         holder.mServingsTv.setText(String.valueOf(recipe.getServings()));
         holder.mStepsTv.setText(String.valueOf(recipe.getSteps().length));
-        holder.mIngredientsTv.setText(
-                EntityUtil.getAllIngredientsAsOneString(recipe.getIngredients()));
 
         holder.mBackCardTitleTv.setText(recipe.getName());
         holder.mBackCardIngredientsTv.setText(
@@ -65,7 +66,7 @@ public class RecipeAdapter extends RecyclerView.Adapter<RecipeAdapter.RecipeView
         return mRecipes != null ? mRecipes.length : 0;
     }
 
-    public void setRecipes(Recipe[] recipes) {
+    void setRecipes(Recipe[] recipes) {
         mRecipes = recipes;
         notifyDataSetChanged();
     }
@@ -76,35 +77,37 @@ public class RecipeAdapter extends RecyclerView.Adapter<RecipeAdapter.RecipeView
         ConstraintLayout back_card_layout;
 
         ImageView mBackgroundImage;
+        TextView mErrorTv;
         TextView mTitleTv;
         TextView mServingsTv;
         TextView mStepsTv;
-        TextView mIngredientsTv;
+        Button mIngredientsBtn;
 
         TextView mBackCardTitleTv;
         TextView mBackCardIngredientsTv;
 
-        RecipeViewHolder(View view) {
-            super(view);
+        RecipeViewHolder(final View cardView) {
+            super(cardView);
 
-            front_card_layout = view.findViewById(R.id.front_card_layout);
-            back_card_layout = view.findViewById(R.id.back_card_layout);
+            front_card_layout = cardView.findViewById(R.id.front_card_layout);
+            back_card_layout = cardView.findViewById(R.id.back_card_layout);
 
-            mBackgroundImage = view.findViewById(R.id.card_background_image);
-            mTitleTv = view.findViewById(R.id.card_title_tv);
-            mServingsTv = view.findViewById(R.id.servings_tv);
-            mStepsTv = view.findViewById(R.id.steps_tv);
-            mIngredientsTv = view.findViewById(R.id.ingredients_tv);
+            mBackgroundImage = cardView.findViewById(R.id.card_background_image);
+            mErrorTv = cardView.findViewById(R.id.error_tv);
+            mTitleTv = cardView.findViewById(R.id.card_title_tv);
+            mServingsTv = cardView.findViewById(R.id.servings_tv);
+            mStepsTv = cardView.findViewById(R.id.steps_tv);
+            mIngredientsBtn = cardView.findViewById(R.id.ingredients_btn);
 
-            mBackCardTitleTv = view.findViewById(R.id.back_card_title_tv);
-            mBackCardIngredientsTv = view.findViewById(R.id.back_card_ingredients_tv);
+            mBackCardTitleTv = cardView.findViewById(R.id.back_card_title_tv);
+            mBackCardIngredientsTv = cardView.findViewById(R.id.back_card_ingredients_tv);
 
             // code from https://stackoverflow.com/a/46111960
-            view.setOnClickListener(new View.OnClickListener() {
+            View.OnClickListener cardRotateClick = new View.OnClickListener() {
                 @Override
                 public void onClick(View view) {
-                    final ObjectAnimator oa1 = ObjectAnimator.ofFloat(view, "scaleX", 1f, 0f);
-                    final ObjectAnimator oa2 = ObjectAnimator.ofFloat(view, "scaleX", 0f, 1f);
+                    final ObjectAnimator oa1 = ObjectAnimator.ofFloat(cardView, "scaleX", 1f, 0f);
+                    final ObjectAnimator oa2 = ObjectAnimator.ofFloat(cardView, "scaleX", 0f, 1f);
                     oa1.setInterpolator(new DecelerateInterpolator());
                     oa2.setInterpolator(new AccelerateDecelerateInterpolator());
                     oa1.addListener(new AnimatorListenerAdapter() {
@@ -127,7 +130,9 @@ public class RecipeAdapter extends RecyclerView.Adapter<RecipeAdapter.RecipeView
                     oa2.setDuration(500);
                     oa1.start();
                 }
-            });
+            };
+            mIngredientsBtn.setOnClickListener(cardRotateClick);
+            back_card_layout.setOnClickListener(cardRotateClick);
         }
     }
 

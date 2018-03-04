@@ -7,7 +7,7 @@
 
     <android.support.v7.widget.CardView
         android:layout_width="match_parent"
-        android:layout_height="310dp"
+        android:layout_height="290dp"
         android:layout_margin="16dp"
         android:layout_marginEnd="8dp"
         android:layout_marginStart="8dp"
@@ -25,12 +25,38 @@
             android:layout_margin="1dp"
             android:visibility="visible">
 
+            <android.support.constraint.Guideline
+                android:id="@+id/guideline"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:orientation="vertical"
+                app:layout_constraintGuide_percent="0.5" />
+
             <ImageView
                 android:id="@+id/card_background_image"
                 android:layout_width="match_parent"
                 android:layout_height="200dp"
-                android:background="@drawable/table_surface"
+                android:alpha="0.8"
+                android:background="@drawable/bakings"
                 android:contentDescription="@string/card_background_image_description" />
+
+            <TextView
+                android:id="@+id/error_tv"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginBottom="8dp"
+                android:layout_marginEnd="8dp"
+                android:layout_marginStart="8dp"
+                android:layout_marginTop="8dp"
+                android:text="No Image Found"
+                android:textAllCaps="false"
+                android:textColor="@android:color/white"
+                android:textStyle="bold|italic"
+                android:visibility="invisible"
+                app:layout_constraintBottom_toBottomOf="@+id/card_background_image"
+                app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintTop_toTopOf="parent" />
 
             <TextView
                 android:id="@+id/card_title_tv"
@@ -41,7 +67,7 @@
                 android:layout_marginStart="16dp"
                 android:layout_marginTop="8dp"
                 android:textAppearance="@style/TextAppearance.AppCompat.Large"
-                android:textColor="@android:color/white"
+                android:textColor="@color/colorAccent"
                 android:textStyle="bold"
                 app:layout_constraintBottom_toBottomOf="@+id/card_background_image"
                 app:layout_constraintEnd_toEndOf="@+id/card_background_image"
@@ -55,7 +81,7 @@
                 android:id="@+id/servings_label_tv"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:layout_marginStart="8dp"
+                android:layout_marginStart="16dp"
                 android:layout_marginTop="8dp"
                 android:text="@string/servings_label"
                 app:layout_constraintStart_toStartOf="parent"
@@ -68,52 +94,41 @@
                 android:layout_marginStart="8dp"
                 android:layout_marginTop="8dp"
                 android:text="@string/steps_label"
-                app:layout_constraintStart_toStartOf="parent"
-                app:layout_constraintTop_toBottomOf="@+id/servings_label_tv" />
+                app:layout_constraintStart_toStartOf="@+id/guideline"
+                app:layout_constraintTop_toBottomOf="@+id/card_background_image" />
 
             <TextView
                 android:id="@+id/servings_tv"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:layout_marginStart="12dp"
-                android:layout_marginTop="8dp"
-                app:layout_constraintStart_toEndOf="@+id/ingredients_label_tv"
-                app:layout_constraintTop_toBottomOf="@+id/card_background_image"
+                android:layout_marginStart="16dp"
+                app:layout_constraintStart_toEndOf="@+id/servings_label_tv"
+                app:layout_constraintTop_toTopOf="@+id/servings_label_tv"
                 tools:text="X" />
 
             <TextView
                 android:id="@+id/steps_tv"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:layout_marginTop="8dp"
-                app:layout_constraintStart_toStartOf="@+id/servings_tv"
-                app:layout_constraintTop_toBottomOf="@+id/servings_tv"
+                android:layout_marginStart="16dp"
+                app:layout_constraintStart_toEndOf="@+id/steps_label_tv"
+                app:layout_constraintTop_toTopOf="@+id/steps_label_tv"
                 tools:text="XX" />
 
-            <TextView
-                android:id="@+id/ingredients_label_tv"
+            <Button
+                android:id="@+id/ingredients_btn"
+                style="@style/Widget.AppCompat.Button.Borderless.Colored"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:layout_marginStart="8dp"
-                android:layout_marginTop="8dp"
-                android:text="@string/ingredients_label"
-                app:layout_constraintStart_toStartOf="parent"
-                app:layout_constraintTop_toBottomOf="@+id/steps_label_tv" />
-
-            <TextView
-                android:id="@+id/ingredients_tv"
-                android:layout_width="0dp"
-                android:layout_height="0dp"
+                android:layout_marginBottom="8dp"
                 android:layout_marginEnd="8dp"
-                android:layout_marginTop="8dp"
-                android:ellipsize="end"
-                android:maxLines="2"
+                android:layout_marginStart="8dp"
+                android:text="Show ingredients"
+                android:textColor="@color/colorAccent"
                 app:layout_constraintBottom_toBottomOf="parent"
                 app:layout_constraintEnd_toEndOf="parent"
                 app:layout_constraintHorizontal_bias="0.0"
-                app:layout_constraintStart_toStartOf="@+id/steps_tv"
-                app:layout_constraintTop_toBottomOf="@+id/steps_tv"
-                tools:text="Lorem ipsum dolor sit amet, consetetur sadipscing elitr, sed diam nonumy eirmod tempor invidunt ut labore et dolore magna aliquyam erat, sed diam voluptua. At vero eos et accusam et" />
+                app:layout_constraintStart_toStartOf="parent" />
 
         </android.support.constraint.ConstraintLayout>
 
@@ -144,7 +159,7 @@
                 android:layout_marginEnd="8dp"
                 android:layout_marginStart="8dp"
                 android:layout_marginTop="32dp"
-                android:textAppearance="@style/TextAppearance.AppCompat.Medium"
+                android:textAppearance="@style/TextAppearance.AppCompat.Small"
                 app:layout_constraintEnd_toEndOf="parent"
                 app:layout_constraintStart_toStartOf="parent"
                 app:layout_constraintTop_toBottomOf="@+id/back_card_title_tv"
