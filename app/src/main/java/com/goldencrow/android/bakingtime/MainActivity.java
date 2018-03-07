@@ -1,5 +1,6 @@
 package com.goldencrow.android.bakingtime;
 
+import android.content.Intent;
 import android.content.res.Configuration;
 import android.graphics.drawable.GradientDrawable;
 import android.support.v7.app.AppCompatActivity;
@@ -21,7 +22,8 @@ import retrofit2.Call;
 import retrofit2.Callback;
 import retrofit2.Response;
 
-public class MainActivity extends AppCompatActivity {
+public class MainActivity extends AppCompatActivity
+                        implements RecipeAdapter.RecipeOnClickListener {
 
     private final String TAG = this.getClass().getSimpleName();
 
@@ -50,7 +52,7 @@ public class MainActivity extends AppCompatActivity {
 
         changeLayoutSpanCountFitForDevice();
 
-        mAdapter = new RecipeAdapter(this);
+        mAdapter = new RecipeAdapter(this, this);
 
         mRecipeListRv.setLayoutManager(layoutManager);
         mRecipeListRv.setHasFixedSize(true);
@@ -106,7 +108,10 @@ public class MainActivity extends AppCompatActivity {
     }
 
     private void addSpinningEffectToLoader() {
-        RotateAnimation rotate = new RotateAnimation(0, 180, Animation.RELATIVE_TO_SELF, 0.5f, Animation.RELATIVE_TO_SELF, 0.5f);
+        RotateAnimation rotate = new RotateAnimation(
+                0, 180,
+                Animation.RELATIVE_TO_SELF,
+                0.5f, Animation.RELATIVE_TO_SELF, 0.5f);
         rotate.setDuration(1000);
         rotate.setRepeatCount(Animation.INFINITE);
         rotate.setInterpolator(new LinearInterpolator());
@@ -117,5 +122,12 @@ public class MainActivity extends AppCompatActivity {
     private void removeLoadingIndicator() {
         mLoadingIndicatorIv.clearAnimation();
         mLoadingIndicatorIv.setVisibility(View.INVISIBLE);
+    }
+
+    @Override
+    public void OnClick(Recipe recipe) {
+        Intent intent = new Intent(this, RecipeDetailActivity.class);
+        intent.putExtra(RecipeDetailActivity.RECIPE_KEY, recipe);
+        startActivity(intent);
     }
 }

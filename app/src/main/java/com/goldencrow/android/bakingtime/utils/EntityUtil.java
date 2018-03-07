@@ -21,7 +21,9 @@ public class EntityUtil {
             }
 
             builder.append(" ");
-            builder.append(ingredient.getMeasure());
+            if (!ingredient.getMeasure().toUpperCase().equals("UNIT")) {
+                builder.append(ingredient.getMeasure());
+            }
             builder.append(" ");
             builder.append(ingredient.getIngredient());
 

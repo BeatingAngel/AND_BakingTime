@@ -28,8 +28,15 @@ public class RecipeAdapter extends RecyclerView.Adapter<RecipeAdapter.RecipeView
     private Context mContext;
     private Recipe[] mRecipes;
 
-    public RecipeAdapter(Context context) {
-        mContext = context;
+    private RecipeOnClickListener mRecipeClick;
+
+    interface RecipeOnClickListener {
+        void OnClick(Recipe recipe);
+    }
+
+    RecipeAdapter(Context context, RecipeOnClickListener recipeClick) {
+        this.mContext = context;
+        this.mRecipeClick = recipeClick;
     }
 
     @Override
@@ -133,6 +140,13 @@ public class RecipeAdapter extends RecyclerView.Adapter<RecipeAdapter.RecipeView
             };
             mIngredientsBtn.setOnClickListener(cardRotateClick);
             back_card_layout.setOnClickListener(cardRotateClick);
+            front_card_layout.setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View view) {
+                    int position = getAdapterPosition();
+                    mRecipeClick.OnClick(mRecipes[position]);
+                }
+            });
         }
     }
 

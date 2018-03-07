@@ -11,7 +11,7 @@
         android:id="@+id/loading_indicator_iv"
         android:layout_width="70dp"
         android:layout_height="70dp"
-        android:contentDescription="Loading Indicator Logo"
+        android:contentDescription="@string/loading_indicator_description"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
