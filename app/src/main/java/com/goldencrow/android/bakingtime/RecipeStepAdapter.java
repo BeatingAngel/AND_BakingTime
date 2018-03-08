@@ -1,12 +1,12 @@
 package com.goldencrow.android.bakingtime;
 
-import android.content.Context;
 import android.support.v7.widget.RecyclerView;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.TextView;
 
+import com.goldencrow.android.bakingtime.entities.Ingredient;
 import com.goldencrow.android.bakingtime.entities.Step;
 
 import java.util.Arrays;
@@ -21,8 +21,10 @@ public class RecipeStepAdapter extends RecyclerView.Adapter<RecipeStepAdapter.Re
     private static final int RECIPE_STEP_VIEW_TYPE = 1;
 
     private Step[] mSteps;
+    private RecipeMasterListFragment.OnStepClickListener mCallback;
 
-    RecipeStepAdapter() {
+    RecipeStepAdapter(RecipeMasterListFragment.OnStepClickListener callback) {
+        this.mCallback = callback;
     }
 
     void setSteps(Step[] steps) {
@@ -69,7 +71,7 @@ public class RecipeStepAdapter extends RecyclerView.Adapter<RecipeStepAdapter.Re
         }
     }
 
-    class RecipeStepViewHolder extends RecyclerView.ViewHolder {
+    class RecipeStepViewHolder extends RecyclerView.ViewHolder implements View.OnClickListener {
 
         int mViewType;
 
@@ -81,7 +83,14 @@ public class RecipeStepAdapter extends RecyclerView.Adapter<RecipeStepAdapter.Re
             this.mViewType = viewType;
 
             mStepDescTv = itemView.findViewById(R.id.recipe_step_desc_tv);
+
+            itemView.setOnClickListener(this);
         }
 
+        @Override
+        public void onClick(View view) {
+            int position = getAdapterPosition();
+            mCallback.onStepClick(position, mSteps);
+        }
     }
 }
