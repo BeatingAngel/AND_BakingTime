@@ -2,7 +2,6 @@ package com.goldencrow.android.bakingtime;
 
 import android.content.Intent;
 import android.content.res.Configuration;
-import android.graphics.drawable.GradientDrawable;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.support.v7.widget.GridLayoutManager;
@@ -14,6 +13,7 @@ import android.view.animation.LinearInterpolator;
 import android.view.animation.RotateAnimation;
 import android.widget.ImageView;
 
+import com.goldencrow.android.bakingtime.adapters.RecipeAdapter;
 import com.goldencrow.android.bakingtime.endpoints.RecipeEndpointInterface;
 import com.goldencrow.android.bakingtime.entities.Recipe;
 import com.goldencrow.android.bakingtime.utils.NetworkUtil;
@@ -27,20 +27,17 @@ public class MainActivity extends AppCompatActivity
 
     private final String TAG = this.getClass().getSimpleName();
 
-    private RecyclerView mRecipeListRv;
     private ImageView mLoadingIndicatorIv;
 
     private RecipeAdapter mAdapter;
     private GridLayoutManager layoutManager;
-
-    private RecipeEndpointInterface mRecipeEndpoint;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
 
-        mRecipeListRv = findViewById(R.id.recipe_list_rv);
+        RecyclerView recipeListRv = findViewById(R.id.recipe_list_rv);
         mLoadingIndicatorIv = findViewById(R.id.loading_indicator_iv);
 
         // make the donut symbol rotate like a loading indicator
@@ -54,14 +51,15 @@ public class MainActivity extends AppCompatActivity
 
         mAdapter = new RecipeAdapter(this, this);
 
-        mRecipeListRv.setLayoutManager(layoutManager);
-        mRecipeListRv.setHasFixedSize(true);
-        mRecipeListRv.setAdapter(mAdapter);
+        recipeListRv.setLayoutManager(layoutManager);
+        recipeListRv.setHasFixedSize(true);
+        recipeListRv.setAdapter(mAdapter);
 
         // getting all the data from the network and set it to the adapter.
-        mRecipeEndpoint = NetworkUtil.getClient().create(RecipeEndpointInterface.class);
+        RecipeEndpointInterface recipeEndpoint =
+                NetworkUtil.getClient().create(RecipeEndpointInterface.class);
 
-        Call<Recipe[]> recipeCall = mRecipeEndpoint.doGetRecipes();
+        Call<Recipe[]> recipeCall = recipeEndpoint.doGetRecipes();
         recipeCall.enqueue(new Callback<Recipe[]>() {
             @Override
             public void onResponse(Call<Recipe[]> call, Response<Recipe[]> response) {

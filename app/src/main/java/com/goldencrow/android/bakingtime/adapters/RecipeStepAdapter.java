@@ -1,12 +1,14 @@
-package com.goldencrow.android.bakingtime;
+package com.goldencrow.android.bakingtime.adapters;
 
+import android.content.Context;
 import android.support.v7.widget.RecyclerView;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.TextView;
 
-import com.goldencrow.android.bakingtime.entities.Ingredient;
+import com.goldencrow.android.bakingtime.R;
+import com.goldencrow.android.bakingtime.RecipeMasterListFragment;
 import com.goldencrow.android.bakingtime.entities.Step;
 
 import java.util.Arrays;
@@ -21,13 +23,17 @@ public class RecipeStepAdapter extends RecyclerView.Adapter<RecipeStepAdapter.Re
     private static final int RECIPE_STEP_VIEW_TYPE = 1;
 
     private Step[] mSteps;
+    private Context mContext;
     private RecipeMasterListFragment.OnStepClickListener mCallback;
 
-    RecipeStepAdapter(RecipeMasterListFragment.OnStepClickListener callback) {
+    private RecipeStepViewHolder mSelectedStep;
+
+    public RecipeStepAdapter(Context context, RecipeMasterListFragment.OnStepClickListener callback) {
+        this.mContext = context;
         this.mCallback = callback;
     }
 
-    void setSteps(Step[] steps) {
+    public void setSteps(Step[] steps) {
         Arrays.sort(steps);
         this.mSteps = steps;
         notifyDataSetChanged();
@@ -90,6 +96,16 @@ public class RecipeStepAdapter extends RecyclerView.Adapter<RecipeStepAdapter.Re
         @Override
         public void onClick(View view) {
             int position = getAdapterPosition();
+
+            if (position != 0) {
+                if (mSelectedStep != null) {
+                    mSelectedStep.mStepDescTv
+                            .setBackgroundColor(mContext.getColor(R.color.transparent));
+                }
+                mStepDescTv.setBackgroundColor(mContext.getColor(R.color.listItemSelected));
+                mSelectedStep = this;
+            }
+
             mCallback.onStepClick(position, mSteps);
         }
     }

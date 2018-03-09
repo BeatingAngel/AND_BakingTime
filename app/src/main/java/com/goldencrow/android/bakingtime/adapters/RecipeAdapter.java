@@ -1,4 +1,4 @@
-package com.goldencrow.android.bakingtime;
+package com.goldencrow.android.bakingtime.adapters;
 
 import android.animation.Animator;
 import android.animation.AnimatorListenerAdapter;
@@ -15,6 +15,7 @@ import android.widget.Button;
 import android.widget.ImageView;
 import android.widget.TextView;
 
+import com.goldencrow.android.bakingtime.R;
 import com.goldencrow.android.bakingtime.entities.Recipe;
 import com.goldencrow.android.bakingtime.utils.EntityUtil;
 import com.squareup.picasso.Picasso;
@@ -30,11 +31,11 @@ public class RecipeAdapter extends RecyclerView.Adapter<RecipeAdapter.RecipeView
 
     private RecipeOnClickListener mRecipeClick;
 
-    interface RecipeOnClickListener {
+    public interface RecipeOnClickListener {
         void OnClick(Recipe recipe);
     }
 
-    RecipeAdapter(Context context, RecipeOnClickListener recipeClick) {
+    public RecipeAdapter(Context context, RecipeOnClickListener recipeClick) {
         this.mContext = context;
         this.mRecipeClick = recipeClick;
     }
@@ -73,7 +74,7 @@ public class RecipeAdapter extends RecyclerView.Adapter<RecipeAdapter.RecipeView
         return mRecipes != null ? mRecipes.length : 0;
     }
 
-    void setRecipes(Recipe[] recipes) {
+    public void setRecipes(Recipe[] recipes) {
         mRecipes = recipes;
         notifyDataSetChanged();
     }

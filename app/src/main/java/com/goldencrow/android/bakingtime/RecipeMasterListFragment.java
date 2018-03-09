@@ -14,6 +14,7 @@ import android.view.animation.LinearInterpolator;
 import android.view.animation.RotateAnimation;
 import android.widget.ImageView;
 
+import com.goldencrow.android.bakingtime.adapters.RecipeStepAdapter;
 import com.goldencrow.android.bakingtime.entities.Recipe;
 import com.goldencrow.android.bakingtime.entities.Step;
 
@@ -57,7 +58,7 @@ public class RecipeMasterListFragment extends Fragment {
         LinearLayoutManager layoutManager = new LinearLayoutManager(
                 getContext(), LinearLayoutManager.VERTICAL, false);
 
-        RecipeStepAdapter adapter = new RecipeStepAdapter(mCallback);
+        RecipeStepAdapter adapter = new RecipeStepAdapter(getContext(), mCallback);
 
         mRecipeStepsRv.setLayoutManager(layoutManager);
         mRecipeStepsRv.setAdapter(adapter);

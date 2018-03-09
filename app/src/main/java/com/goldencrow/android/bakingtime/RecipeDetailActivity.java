@@ -7,6 +7,7 @@ import android.os.Bundle;
 
 import com.goldencrow.android.bakingtime.entities.Recipe;
 import com.goldencrow.android.bakingtime.entities.Step;
+import com.goldencrow.android.bakingtime.utils.EntityUtil;
 
 import java.util.ArrayList;
 import java.util.Arrays;
@@ -19,25 +20,27 @@ public class RecipeDetailActivity extends AppCompatActivity
     public static final String RECIPE_STEP_POS_KEY = "STEP_POS_KEY";
     public static final String RECIPE_INGREDIENTS_KEY = "INGREDIENTS_KEY";
 
-    RecipeMasterListFragment mRecipeFragment;
+    RecipeMasterListFragment mMasterListFragment;
+
+    Recipe mRecipe;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_recipe_detail);
 
-        Recipe recipe;
-
         Intent intent = getIntent();
         if (intent != null && intent.hasExtra(RECIPE_KEY)) {
-            recipe = intent.getParcelableExtra(RECIPE_KEY);
+            mRecipe = intent.getParcelableExtra(RECIPE_KEY);
 
-            mRecipeFragment = new RecipeMasterListFragment();
-            mRecipeFragment.setRecipe(recipe);
+            setTitle(mRecipe.getName());
+
+            mMasterListFragment = new RecipeMasterListFragment();
+            mMasterListFragment.setRecipe(mRecipe);
 
             getSupportFragmentManager()
                     .beginTransaction()
-                    .add(R.id.master_list_container, mRecipeFragment)
+                    .add(R.id.master_list_container, mMasterListFragment)
                     .commit();
         }
     }
@@ -45,24 +48,38 @@ public class RecipeDetailActivity extends AppCompatActivity
     @Override
     public void onStepClick(int position, Step[] steps) {
         boolean isTablet = getResources().getBoolean(R.bool.isTablet);
-        boolean isLandscape =
-                getResources().getConfiguration().orientation == Configuration.ORIENTATION_LANDSCAPE;
 
-        if (isTablet && isLandscape && position != 0) {
-            RecipeStepFragment stepFragment = new RecipeStepFragment();
-            stepFragment.setData(steps, position - 1);
+        if (isTablet) {
+            Step[] mySteps = steps;
+            int pos = position - 1;
+            if (position == 0) {
+                mySteps = new Step[] {new Step(
+                        EntityUtil.getAllIngredientsAsAnEnumerationString(mRecipe.getIngredients())
+                )};
+                pos = position;
+            }
+
+            RecipeMasterDetailFragment masterDetailFragment = new RecipeMasterDetailFragment();
+            masterDetailFragment.setData(mySteps, pos);
 
             getSupportFragmentManager()
                     .beginTransaction()
-                    .replace(R.id.master_detail_container, stepFragment)
+                    .replace(R.id.master_detail_container, masterDetailFragment)
                     .commit();
-
-        } else if (position != 0) {
-            Intent intent = new Intent(this, RecipeStepActivity.class);
-            intent.putExtra(RECIPE_STEP_POS_KEY, position - 1);
-
+        } else {
             ArrayList<Step> stepList = new ArrayList<>();
-            stepList.addAll(Arrays.asList(steps));
+            int pos = position - 1;
+            if (position == 0) {
+                stepList.add(new Step(
+                        EntityUtil.getAllIngredientsAsAnEnumerationString(mRecipe.getIngredients())
+                ));
+                pos = position;
+            } else {
+                stepList.addAll(Arrays.asList(steps));
+            }
+
+            Intent intent = new Intent(this, RecipeStepActivity.class);
+            intent.putExtra(RECIPE_STEP_POS_KEY, pos);
             intent.putParcelableArrayListExtra(RECIPE_STEPS_KEY, stepList);
 
             startActivity(intent);

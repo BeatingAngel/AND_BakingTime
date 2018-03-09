@@ -16,6 +16,10 @@ public class Step implements Parcelable, Comparable<Step> {
     private String videoURL;
     private String thumbnailURL;
 
+    public Step(String description) {
+        this.description = description;
+    }
+
     private Step(Parcel in) {
         id = in.readInt();
         shortDescription = in.readString();
