@@ -1,6 +1,7 @@
 package com.goldencrow.android.bakingtime;
 
 import android.content.Intent;
+import android.content.SharedPreferences;
 import android.content.res.Configuration;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
@@ -16,6 +17,7 @@ import android.widget.ImageView;
 import com.goldencrow.android.bakingtime.adapters.RecipeAdapter;
 import com.goldencrow.android.bakingtime.endpoints.RecipeEndpointInterface;
 import com.goldencrow.android.bakingtime.entities.Recipe;
+import com.goldencrow.android.bakingtime.utils.EntityUtil;
 import com.goldencrow.android.bakingtime.utils.NetworkUtil;
 
 import retrofit2.Call;
@@ -59,12 +61,13 @@ public class MainActivity extends AppCompatActivity
         RecipeEndpointInterface recipeEndpoint =
                 NetworkUtil.getClient().create(RecipeEndpointInterface.class);
 
-        Call<Recipe[]> recipeCall = recipeEndpoint.doGetRecipes();
+        final Call<Recipe[]> recipeCall = recipeEndpoint.doGetRecipes();
         recipeCall.enqueue(new Callback<Recipe[]>() {
             @Override
             public void onResponse(Call<Recipe[]> call, Response<Recipe[]> response) {
                 removeLoadingIndicator();
-                mAdapter.setRecipes(response.body());
+                Recipe[] recipes = response.body();
+                mAdapter.setRecipes(recipes);
             }
 
             @Override

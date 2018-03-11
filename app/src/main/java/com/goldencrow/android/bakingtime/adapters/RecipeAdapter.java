@@ -13,6 +13,7 @@ import android.view.animation.AccelerateDecelerateInterpolator;
 import android.view.animation.DecelerateInterpolator;
 import android.widget.Button;
 import android.widget.ImageView;
+import android.widget.LinearLayout;
 import android.widget.TextView;
 
 import com.goldencrow.android.bakingtime.R;
@@ -28,6 +29,8 @@ public class RecipeAdapter extends RecyclerView.Adapter<RecipeAdapter.RecipeView
 
     private Context mContext;
     private Recipe[] mRecipes;
+
+    private ImageView mBookmarkedView;
 
     private RecipeOnClickListener mRecipeClick;
 
@@ -85,6 +88,7 @@ public class RecipeAdapter extends RecyclerView.Adapter<RecipeAdapter.RecipeView
         ConstraintLayout back_card_layout;
 
         ImageView mBackgroundImage;
+        ImageView mBookmarkIv;
         TextView mErrorTv;
         TextView mTitleTv;
         TextView mServingsTv;
@@ -101,6 +105,7 @@ public class RecipeAdapter extends RecyclerView.Adapter<RecipeAdapter.RecipeView
             back_card_layout = cardView.findViewById(R.id.back_card_layout);
 
             mBackgroundImage = cardView.findViewById(R.id.card_background_image);
+            mBookmarkIv = cardView.findViewById(R.id.bookmark_iv);
             mErrorTv = cardView.findViewById(R.id.error_tv);
             mTitleTv = cardView.findViewById(R.id.card_title_tv);
             mServingsTv = cardView.findViewById(R.id.servings_tv);
@@ -110,6 +115,25 @@ public class RecipeAdapter extends RecyclerView.Adapter<RecipeAdapter.RecipeView
             mBackCardTitleTv = cardView.findViewById(R.id.back_card_title_tv);
             mBackCardIngredientsTv = cardView.findViewById(R.id.back_card_ingredients_tv);
 
+            mBookmarkIv.setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View view) {
+                    if (mBookmarkIv.getHeight() != 120) {
+                        EntityUtil.setFavoriteRecipe(mContext,
+                                mTitleTv.getText().toString(),
+                                mBackCardIngredientsTv.getText().toString());
+                    }
+                    toggleImageHeight(mBookmarkIv);
+                    if (mBookmarkedView != null) {
+                        toggleImageHeight(mBookmarkedView);
+                    }
+                    mBookmarkedView = mBookmarkIv;
+                }
+            });
+
+            //========
+            // Handle the card-flip animations:
+            //========
             // code from https://stackoverflow.com/a/46111960
             View.OnClickListener cardRotateClick = new View.OnClickListener() {
                 @Override
@@ -148,6 +172,12 @@ public class RecipeAdapter extends RecyclerView.Adapter<RecipeAdapter.RecipeView
                     mRecipeClick.OnClick(mRecipes[position]);
                 }
             });
+        }
+
+        private void toggleImageHeight(ImageView view) {
+            ViewGroup.LayoutParams params = view.getLayoutParams();
+            params.height = view.getHeight() != 120 ? 120 : 50;
+            view.setLayoutParams(params);
         }
     }
 
