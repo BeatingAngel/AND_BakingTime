@@ -245,7 +245,7 @@ public class RecipeAdapter extends RecyclerView.Adapter<RecipeAdapter.RecipeView
     }
 
     /**
-     * The class representing a item in the list.
+     * The class representing an item in the list.
      *
      * @author Philipp Hermüller
      * @version 2018.3.14

@@ -73,12 +73,16 @@ public class RecipeStepAdapter extends RecyclerView.Adapter<RecipeStepAdapter.Re
         this.mCallback = callback;
     }
 
-    public void setSteps(Step[] steps) {
-        Arrays.sort(steps);
-        this.mSteps = steps;
-        notifyDataSetChanged();
-    }
-
+    /**
+     * This method inflates the appropriate layout for the list-item.
+     * <p>
+     * If the item is first (0) in position then the item will be inflated as an ingredient layout.
+     * Otherwise it will be inflated as a step layout.
+     *
+     * @param parent    the parent-viewGroup which owns this view.
+     * @param viewType  specifies which layout the view on this position should have.
+     * @return          a new RecipeStepViewHolder object.
+     */
     @Override
     public RecipeStepViewHolder onCreateViewHolder(ViewGroup parent, int viewType) {
         int layoutId;
@@ -94,6 +98,15 @@ public class RecipeStepAdapter extends RecyclerView.Adapter<RecipeStepAdapter.Re
         return new RecipeStepViewHolder(view, viewType);
     }
 
+    /**
+     * This method sets the information from the recipe-step at the current position into the
+     * appropriate view and therefore fills them with text and info.
+     * <p>
+     * But if the view is of the IngredientViewType, then no information will be bound.
+     *
+     * @param holder    the ViewHolder where all the views are located.
+     * @param position  the position of the item in the list.
+     */
     @Override
     public void onBindViewHolder(RecipeStepViewHolder holder, int position) {
 
@@ -103,11 +116,22 @@ public class RecipeStepAdapter extends RecyclerView.Adapter<RecipeStepAdapter.Re
         }
     }
 
+    /**
+     * Tells how many items the adapter currently holds.
+     *
+     * @return  the number of items in the list.
+     */
     @Override
     public int getItemCount() {
         return mSteps != null ? mSteps.length : 0;
     }
 
+    /**
+     * Return the appropriate viewType for the item at the passed position.
+     *
+     * @param position  the current position of the item in the list.
+     * @return          the viewType of the item.
+     */
     @Override
     public int getItemViewType(int position) {
         if (position == 0) {
@@ -117,12 +141,36 @@ public class RecipeStepAdapter extends RecyclerView.Adapter<RecipeStepAdapter.Re
         }
     }
 
+    /**
+     * Initializes the Steps for the list.
+     *
+     * @param steps the array of steps which will be displayed in the list.
+     */
+    public void setSteps(Step[] steps) {
+        Arrays.sort(steps);
+        this.mSteps = steps;
+        notifyDataSetChanged();
+    }
+
+    /**
+     * The class representing an item in the list.
+     *
+     * @author Philipp Hermüller
+     * @version 2018.3.14
+     * @since 1.0
+     */
     class RecipeStepViewHolder extends RecyclerView.ViewHolder implements View.OnClickListener {
 
         int mViewType;
 
         TextView mStepDescTv;
 
+        /**
+         * Constructor which initializes the view fields and the onClickListener.
+         *
+         * @param itemView  the view representing the item in the list.
+         * @param viewType  the viewType which tells what type of view it is.
+         */
         RecipeStepViewHolder(View itemView, int viewType) {
             super(itemView);
 
@@ -133,10 +181,17 @@ public class RecipeStepAdapter extends RecyclerView.Adapter<RecipeStepAdapter.Re
             itemView.setOnClickListener(this);
         }
 
+        /**
+         * Handles the click on a recipe step (and not the ingredients).
+         *
+         * @param view  the view which was clicked on.
+         */
         @Override
         public void onClick(View view) {
             int position = getAdapterPosition();
 
+            // If the item is not on the position where the ingredients-card is, then
+            //    color the item as selected.
             if (position != 0) {
                 if (mSelectedStep != null) {
                     mSelectedStep.mStepDescTv
