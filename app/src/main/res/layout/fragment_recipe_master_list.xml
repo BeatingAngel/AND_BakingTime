@@ -7,10 +7,10 @@
 
     <android.support.v7.widget.RecyclerView
         android:id="@+id/recipe_step_list_rv"
-        android:layout_width="0dp"
-        android:layout_height="0dp"
-        android:layout_marginEnd="8dp"
-        android:layout_marginStart="8dp"
+        android:layout_width="@dimen/responsive_size"
+        android:layout_height="@dimen/responsive_size"
+        android:layout_marginEnd="@dimen/recycler_list_horizontal_margin"
+        android:layout_marginStart="@dimen/recycler_list_horizontal_margin"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
@@ -20,8 +20,8 @@
 
     <ImageView
         android:id="@+id/loading_indicator_iv"
-        android:layout_width="70dp"
-        android:layout_height="70dp"
+        android:layout_width="@dimen/loading_indicator_size"
+        android:layout_height="@dimen/loading_indicator_size"
         android:contentDescription="@string/loading_indicator_description"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"

@@ -1,8 +1,8 @@
 package com.goldencrow.android.bakingtime;
 
 import android.content.Intent;
-import android.content.SharedPreferences;
 import android.content.res.Configuration;
+import android.support.annotation.NonNull;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.support.v7.widget.GridLayoutManager;
@@ -17,13 +17,19 @@ import android.widget.ImageView;
 import com.goldencrow.android.bakingtime.adapters.RecipeAdapter;
 import com.goldencrow.android.bakingtime.endpoints.RecipeEndpointInterface;
 import com.goldencrow.android.bakingtime.entities.Recipe;
-import com.goldencrow.android.bakingtime.utils.EntityUtil;
 import com.goldencrow.android.bakingtime.utils.NetworkUtil;
 
 import retrofit2.Call;
 import retrofit2.Callback;
 import retrofit2.Response;
 
+/**
+ *
+ *
+ * @author Philipp Hermüller
+ * @version 2018.3.14
+ * @since 1.0
+ */
 public class MainActivity extends AppCompatActivity
                         implements RecipeAdapter.RecipeOnClickListener {
 
@@ -64,14 +70,14 @@ public class MainActivity extends AppCompatActivity
         final Call<Recipe[]> recipeCall = recipeEndpoint.doGetRecipes();
         recipeCall.enqueue(new Callback<Recipe[]>() {
             @Override
-            public void onResponse(Call<Recipe[]> call, Response<Recipe[]> response) {
+            public void onResponse(@NonNull Call<Recipe[]> call, @NonNull Response<Recipe[]> response) {
                 removeLoadingIndicator();
                 Recipe[] recipes = response.body();
                 mAdapter.setRecipes(recipes);
             }
 
             @Override
-            public void onFailure(Call<Recipe[]> call, Throwable t) {
+            public void onFailure(@NonNull Call<Recipe[]> call, @NonNull Throwable t) {
                 call.cancel();
                 Log.w(TAG, t.getLocalizedMessage());
             }

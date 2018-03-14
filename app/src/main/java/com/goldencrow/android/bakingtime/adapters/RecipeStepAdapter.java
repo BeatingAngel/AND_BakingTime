@@ -14,20 +14,60 @@ import com.goldencrow.android.bakingtime.entities.Step;
 import java.util.Arrays;
 
 /**
- * Created by Philipp
+ * The adapter which handles all the recipe steps and a step showing the ingredients.
+ *
+ * @author Philipp Hermüller
+ * @version 2018.3.14
+ * @since 1.0
  */
-
 public class RecipeStepAdapter extends RecyclerView.Adapter<RecipeStepAdapter.RecipeStepViewHolder> {
 
+    /**
+     * Value defining the view as the item which will display the ingredients
+     * instead of a step.
+     */
     private static final int INGREDIENTS_VIEW_TYPE = 0;
+
+    /**
+     * Value defining the view as the item which will display a recipe step.
+     */
     private static final int RECIPE_STEP_VIEW_TYPE = 1;
 
-    private Step[] mSteps;
+    /**
+     * Context of the activity which initializes the RecyclerList.
+     */
     private Context mContext;
+
+    /**
+     * Contains all steps which will be displayed in the list.
+     * It will be initialized by an intern method.
+     *
+     * @see #setSteps(Step[])
+     */
+    private Step[] mSteps;
+
+    /**
+     * This callback is used to call the onClick method from the parent activity.
+     *
+     * @see RecipeStepViewHolder#onClick(View)
+     */
     private RecipeMasterListFragment.OnStepClickListener mCallback;
 
+    /**
+     * Contains the selected step from the list.
+     * <p>
+     * This is used so that if another step (item in list) is selected, the old selected item
+     * can be set back to normal.
+     */
     private RecipeStepViewHolder mSelectedStep;
 
+    /**
+     * Constructor which initializes the context and callback variables.
+     *
+     * @param context   the context of the parent activity where the RecyclerList is located at.
+     * @param callback  the callback method containing the method which will be performed if a
+     *                  step-item was clicked on.
+     */
     public RecipeStepAdapter(Context context, RecipeMasterListFragment.OnStepClickListener callback) {
         this.mContext = context;
         this.mCallback = callback;

@@ -8,12 +8,17 @@ import android.content.Context;
 import android.content.Intent;
 import android.content.SharedPreferences;
 import android.os.Bundle;
+import android.preference.PreferenceManager;
 import android.widget.RemoteViews;
 
-import com.goldencrow.android.bakingtime.utils.EntityUtil;
+import com.goldencrow.android.bakingtime.adapters.RecipeAdapter;
 
 /**
  * Implementation of App Widget functionality.
+ *
+ * @author Philipp Hermüller
+ * @version 2018.3.14
+ * @since 1.0
  */
 public class FavoriteRecipeWidget extends AppWidgetProvider {
 
@@ -32,11 +37,14 @@ public class FavoriteRecipeWidget extends AppWidgetProvider {
         views.setOnClickPendingIntent(R.id.widget_layout, pendingIntent);
 
         String recipeDefaultName = "No Favorite Recipe";
-        if (recipeName == null) {
-            recipeName = recipeDefaultName;
-        }
-        if (ingredients == null) {
-            ingredients = "";
+        if (recipeName == null && ingredients == null) {
+            SharedPreferences sharedPreferences =
+                    PreferenceManager.getDefaultSharedPreferences(context);
+
+            recipeName = sharedPreferences.getString(
+                    RecipeAdapter.BOOKMARK_TITLE_KEY, recipeDefaultName);
+            ingredients = sharedPreferences.getString(
+                    RecipeAdapter.BOOKMARK_INGREDIENTS_KEY, "");
         }
 
         views.setTextViewText(R.id.widget_recipe_tv, recipeName);

@@ -7,13 +7,13 @@
 
     <android.support.v7.widget.CardView
         android:layout_width="match_parent"
-        android:layout_height="290dp"
-        android:layout_margin="16dp"
-        android:layout_marginEnd="8dp"
-        android:layout_marginStart="8dp"
-        android:layout_marginTop="8dp"
-        android:elevation="5dp"
-        app:cardCornerRadius="5dp"
+        android:layout_height="@dimen/recipe_card_height"
+        android:layout_margin="@dimen/recipe_card_margin"
+        android:layout_marginEnd="@dimen/recipe_card_horizontal_and_top_margin"
+        android:layout_marginStart="@dimen/recipe_card_horizontal_and_top_margin"
+        android:layout_marginTop="@dimen/recipe_card_horizontal_and_top_margin"
+        android:elevation="@dimen/recipe_card_elevation"
+        app:cardCornerRadius="@dimen/recipe_card_corner_radius"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="parent">
@@ -22,7 +22,6 @@
             android:id="@+id/front_card_layout"
             android:layout_width="match_parent"
             android:layout_height="match_parent"
-            android:layout_margin="1dp"
             android:visibility="visible">
 
             <android.support.constraint.Guideline
@@ -35,7 +34,7 @@
             <ImageView
                 android:id="@+id/card_background_image"
                 android:layout_width="match_parent"
-                android:layout_height="200dp"
+                android:layout_height="@dimen/recipe_card_image_height"
                 android:alpha="0.8"
                 android:background="@drawable/bakings"
                 android:contentDescription="@string/card_background_image_description" />
@@ -44,11 +43,7 @@
                 android:id="@+id/error_tv"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:layout_marginBottom="8dp"
-                android:layout_marginEnd="8dp"
-                android:layout_marginStart="8dp"
-                android:layout_marginTop="8dp"
-                android:text="No Image Found"
+                android:text="@string/no_image_found"
                 android:textAllCaps="false"
                 android:textColor="@android:color/white"
                 android:textStyle="bold|italic"
@@ -60,11 +55,12 @@
 
             <ImageView
                 android:id="@+id/bookmark_iv"
-                android:layout_width="100dp"
-                android:layout_height="50dp"
+                android:layout_width="@dimen/bookmark_width"
+                android:layout_height="@dimen/bookmark_unmarked_height"
                 android:adjustViewBounds="true"
                 android:cropToPadding="true"
                 android:scaleType="fitXY"
+                android:contentDescription="@string/bookmark_image_description"
                 app:layout_constraintEnd_toEndOf="parent"
                 app:layout_constraintHorizontal_bias="1.0"
                 app:layout_constraintStart_toStartOf="parent"
@@ -73,12 +69,11 @@
 
             <TextView
                 android:id="@+id/card_title_tv"
-                android:layout_width="0dp"
+                android:layout_width="@dimen/responsive_size"
                 android:layout_height="wrap_content"
-                android:layout_marginBottom="8dp"
-                android:layout_marginEnd="16dp"
-                android:layout_marginStart="16dp"
-                android:layout_marginTop="8dp"
+                android:layout_marginBottom="@dimen/recipe_card_title_bottom_margin"
+                android:layout_marginEnd="@dimen/recipe_card_title_horizontal_margin"
+                android:layout_marginStart="@dimen/recipe_card_title_horizontal_margin"
                 android:textAppearance="@style/TextAppearance.AppCompat.Large"
                 android:textColor="@color/colorAccent"
                 android:textStyle="bold"
@@ -94,8 +89,8 @@
                 android:id="@+id/servings_label_tv"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:layout_marginStart="16dp"
-                android:layout_marginTop="8dp"
+                android:layout_marginStart="@dimen/recipe_card_label_left_margin"
+                android:layout_marginTop="@dimen/recipe_card_label_top_margin"
                 android:text="@string/servings_label"
                 app:layout_constraintStart_toStartOf="parent"
                 app:layout_constraintTop_toBottomOf="@+id/card_background_image" />
@@ -104,8 +99,8 @@
                 android:id="@+id/steps_label_tv"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:layout_marginStart="8dp"
-                android:layout_marginTop="8dp"
+                android:layout_marginStart="@dimen/recipe_card_label_left_margin"
+                android:layout_marginTop="@dimen/recipe_card_label_top_margin"
                 android:text="@string/steps_label"
                 app:layout_constraintStart_toStartOf="@+id/guideline"
                 app:layout_constraintTop_toBottomOf="@+id/card_background_image" />
@@ -114,7 +109,7 @@
                 android:id="@+id/servings_tv"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:layout_marginStart="16dp"
+                android:layout_marginStart="@dimen/recipe_card_label_to_info_margin"
                 app:layout_constraintStart_toEndOf="@+id/servings_label_tv"
                 app:layout_constraintTop_toTopOf="@+id/servings_label_tv"
                 tools:text="X" />
@@ -123,7 +118,7 @@
                 android:id="@+id/steps_tv"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:layout_marginStart="16dp"
+                android:layout_marginStart="@dimen/recipe_card_label_to_info_margin"
                 app:layout_constraintStart_toEndOf="@+id/steps_label_tv"
                 app:layout_constraintTop_toTopOf="@+id/steps_label_tv"
                 tools:text="XX" />
@@ -133,10 +128,9 @@
                 style="@style/Widget.AppCompat.Button.Borderless.Colored"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:layout_marginBottom="8dp"
-                android:layout_marginEnd="8dp"
-                android:layout_marginStart="8dp"
-                android:text="Show ingredients"
+                android:layout_marginBottom="@dimen/recipe_card_ingredients_btn_margin"
+                android:layout_marginStart="@dimen/recipe_card_ingredients_btn_margin"
+                android:text="@string/show_ingredients"
                 android:textColor="@color/colorAccent"
                 app:layout_constraintBottom_toBottomOf="parent"
                 app:layout_constraintEnd_toEndOf="parent"
@@ -153,11 +147,11 @@
 
             <TextView
                 android:id="@+id/back_card_title_tv"
-                android:layout_width="0dp"
+                android:layout_width="@dimen/responsive_size"
                 android:layout_height="wrap_content"
-                android:layout_marginEnd="8dp"
-                android:layout_marginStart="8dp"
-                android:layout_marginTop="8dp"
+                android:layout_marginEnd="@dimen/recipe_card_backside_title_margin"
+                android:layout_marginStart="@dimen/recipe_card_backside_title_margin"
+                android:layout_marginTop="@dimen/recipe_card_backside_title_margin"
                 android:textAlignment="center"
                 android:textAppearance="@style/TextAppearance.AppCompat.Large"
                 app:layout_constraintEnd_toEndOf="parent"
@@ -167,11 +161,11 @@
 
             <TextView
                 android:id="@+id/back_card_ingredients_tv"
-                android:layout_width="0dp"
+                android:layout_width="@dimen/responsive_size"
                 android:layout_height="wrap_content"
-                android:layout_marginEnd="8dp"
-                android:layout_marginStart="8dp"
-                android:layout_marginTop="32dp"
+                android:layout_marginEnd="@dimen/recipe_card_backside_ingredients_horizontal_margin"
+                android:layout_marginStart="@dimen/recipe_card_backside_ingredients_horizontal_margin"
+                android:layout_marginTop="@dimen/recipe_card_backside_ingredients_top_margin"
                 android:textAppearance="@style/TextAppearance.AppCompat.Small"
                 app:layout_constraintEnd_toEndOf="parent"
                 app:layout_constraintStart_toStartOf="parent"

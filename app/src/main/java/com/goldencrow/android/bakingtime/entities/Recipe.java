@@ -4,9 +4,12 @@ import android.os.Parcel;
 import android.os.Parcelable;
 
 /**
- * Created by Philipp
+ * This class resembles the Json acquired from the API.
+ *
+ * @author Philipp Hermüller
+ * @version 2018.3.14
+ * @since 1.0
  */
-
 public class Recipe implements Parcelable {
 
     private int id;

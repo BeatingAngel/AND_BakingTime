@@ -1,10 +1,73 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
 
+    <dimen name="responsive_size">0dp</dimen>
+
+    <!-- =======         MAIN ACTIVITY          ======== -->
+
+    <dimen name="loading_indicator_size">70dp</dimen>
+    <dimen name="recycler_list_horizontal_margin">8dp</dimen>
+
+    <!-- =======     FAVORITE RECIPE WIDGET     ======== -->
+
+    <dimen name="widget_recipe_title_horizontal_margin">16dp</dimen>
+    <dimen name="widget_recipe_ingredients_horizontal_margin">16dp</dimen>
+    <dimen name="widget_margin_to_item_above">8dp</dimen>
+
+    <!-- =======  FRAGMENT RECIPE MASTER DETAIL ======== -->
+
+    <dimen name="horizontal_margin_between_buttons">2dp</dimen>
+    <dimen name="button_margin_to_screen">8dp</dimen>
+    <dimen name="button_margin_top">8dp</dimen>
+    <dimen name="recipe_detail_main_content_margin">8dp</dimen>
+    <dimen name="exo_player_margin">8dp</dimen>
+    <dimen name="detail_step_description_margin">16dp</dimen>
+    <dimen name="detail_step_description_margin_bottom">8dp</dimen>
+
+    <!-- =======       RECIPE CARD LAYOUT       ======== -->
+
+    <dimen name="recipe_card_height">290dp</dimen>
+    <dimen name="recipe_card_margin">16dp</dimen>
+    <dimen name="recipe_card_horizontal_and_top_margin">8dp</dimen>
+    <dimen name="recipe_card_elevation">5dp</dimen>
+    <dimen name="recipe_card_corner_radius">5dp</dimen>
+    <dimen name="recipe_card_image_height">200dp</dimen>
+    <dimen name="bookmark_width">100dp</dimen>
+    <dimen name="bookmark_unmarked_height">50dp</dimen>
+    <dimen name="bookmark_marked_height">100dp</dimen>
+    <dimen name="recipe_card_title_horizontal_margin">16dp</dimen>
+    <dimen name="recipe_card_title_bottom_margin">8dp</dimen>
+    <dimen name="recipe_card_label_left_margin">16dp</dimen>
+    <dimen name="recipe_card_label_top_margin">8dp</dimen>
+    <dimen name="recipe_card_label_to_info_margin">16dp</dimen>
+    <dimen name="recipe_card_ingredients_btn_margin">8dp</dimen>
+
+    <dimen name="recipe_card_backside_title_margin">8dp</dimen>
+    <dimen name="recipe_card_backside_ingredients_horizontal_margin">8dp</dimen>
+    <dimen name="recipe_card_backside_ingredients_top_margin">32dp</dimen>
+
+    <!-- =======  RECIPE INGREDIENT LAYOUT CARD   ======== -->
+
+    <dimen name="ingredient_step_card_height">60dp</dimen>
+    <dimen name="ingredient_step_card_vertical_margin">8dp</dimen>
+    <dimen name="ingredient_step_card_text_horizontal_margin">16dp</dimen>
+    <dimen name="ingredient_step_card_text_vertical_margin">8dp</dimen>
+
+    <!-- =======       RECIPE STEP LAYOUT         ======== -->
+
+    <dimen name="recipe_step_horizontal_margin">8dp</dimen>
+    <dimen name="recipe_step_horizontal_padding">8dp</dimen>
+    <dimen name="recipe_step_vertical_padding">16dp</dimen>
+    <dimen name="recipe_step_divider_height">1dp</dimen>
+    <dimen name="recipe_step_divider_horizontal_margin">8dp</dimen>
+
+
     <!--
 Refer to App Widget Documentation for margin information
 http://developer.android.com/guide/topics/appwidgets/index.html#CreatingLayout
     -->
     <dimen name="widget_margin">8dp</dimen>
+
+    <dimen name="exoplayer_default_pic_phone_height">200dp</dimen>
 
 </resources>

@@ -7,4 +7,10 @@
     <string name="loading_indicator_description">Loading Indicator Logo</string>
     <string name="appwidget_text">EXAMPLE</string>
     <string name="add_widget">Add widget</string>
+    <string name="previous_step">Previous Step</string>
+    <string name="next_step">Next Step</string>
+    <string name="no_image_found">No Image Found</string>
+    <string name="bookmark_image_description">bookmark image showing if the recipe is a favorite one</string>
+    <string name="show_ingredients">Show ingredients</string>
+    <string name="ingredients">Ingredients</string>
 </resources>

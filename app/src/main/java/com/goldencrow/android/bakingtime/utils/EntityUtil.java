@@ -14,51 +14,29 @@ import com.goldencrow.android.bakingtime.entities.Recipe;
 import static android.content.Context.MODE_PRIVATE;
 
 /**
- * Created by Philipp
+ * Contains all methods which handle/alter majorly the entities.
+ *
+ * @author Philipp Hermüller
+ * @version 2018.3.14
+ * @since 1.0
  */
-
 public class EntityUtil {
 
-    public static final String PREF_KEY = "com.goldencrow.android.bakingtime";
-    public static final String PREF_KEY_RECIPE = "com.goldencrow.android.bakingtime.recipe";
-    public static final String PREF_KEY_INGREDIENTS = "com.goldencrow.android.bakingtime.ingredients";
-
-    public static String getAllIngredientsAsOneString(Ingredient[] ingredients) {
-        StringBuilder builder = new StringBuilder();
-
-        for (Ingredient ingredient : ingredients) {
-
-            float quantity = ingredient.getQuantity();
-            if (quantity%1 == 0) {
-                builder.append(String.valueOf((int)quantity));
-            } else {
-                builder.append(String.valueOf(quantity));
-            }
-
-            builder.append(" ");
-            if (!ingredient.getMeasure().toUpperCase().equals("UNIT")) {
-                builder.append(ingredient.getMeasure());
-            }
-            builder.append(" ");
-            builder.append(ingredient.getIngredient());
-
-            if (ingredients[ingredients.length - 1] != ingredient) {
-                builder.append(", ");
-            } else {
-                builder.append(" and ");
-            }
-        }
-
-        return builder.toString();
-    }
-
+    /**
+     * Builds a string which looks like an enumeration of all ingredients.
+     *
+     * @param ingredients   the array of ingredients.
+     * @return              a single string containing a list of ingredients.
+     */
     public static String getAllIngredientsAsAnEnumerationString(Ingredient[] ingredients) {
         StringBuilder builder = new StringBuilder();
+        String enumerationSymbol = "* ";
 
         for (Ingredient ingredient : ingredients) {
 
-            builder.append("* ");
+            builder.append(enumerationSymbol);
 
+            // natural numbers don't need a comma.
             float quantity = ingredient.getQuantity();
             if (quantity%1 == 0) {
                 builder.append(String.valueOf((int)quantity));
@@ -77,7 +55,15 @@ public class EntityUtil {
         return builder.toString();
     }
 
-    public static void setFavoriteRecipe(Context context, String recipeName, String ingredients) {
+    /**
+     * Sends a broadcast to the Widget so that all the widget's will get updated to display
+     * the new favorite recipe.
+     *
+     * @param context       the context which will send the Broadcast.
+     * @param recipeName    the name of the recipe.
+     * @param ingredients   a String containing an enumeration of all ingredients.
+     */
+    public static void setFavoriteRecipeToWidget(Context context, String recipeName, String ingredients) {
         Intent updateIntent = new Intent();
         updateIntent.setAction(AppWidgetManager.ACTION_APPWIDGET_UPDATE);
 

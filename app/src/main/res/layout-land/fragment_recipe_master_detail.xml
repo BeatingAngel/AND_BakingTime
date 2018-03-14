@@ -5,12 +5,62 @@
     android:layout_width="match_parent"
     android:layout_height="match_parent">
 
+    <ScrollView
+        android:layout_width="@dimen/responsive_size"
+        android:layout_height="@dimen/responsive_size"
+        android:layout_marginBottom="@dimen/recipe_detail_main_content_margin"
+        android:layout_marginEnd="@dimen/recipe_detail_main_content_margin"
+        android:layout_marginStart="@dimen/recipe_detail_main_content_margin"
+        android:layout_marginTop="@dimen/recipe_detail_main_content_margin"
+        app:layout_constraintBottom_toTopOf="@id/text_to_control_divider"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="parent"
+        app:layout_constraintVertical_bias="0.0">
+
+        <LinearLayout
+            android:id="@+id/linear_layout"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:orientation="vertical">
+
+            <com.google.android.exoplayer2.ui.SimpleExoPlayerView
+                android:id="@+id/video_player"
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                android:layout_marginEnd="@dimen/exo_player_margin"
+                android:layout_marginStart="@dimen/exo_player_margin"
+                android:layout_marginTop="@dimen/exo_player_margin"
+                android:minHeight="@android:dimen/thumbnail_height"
+                app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintTop_toTopOf="parent" />
+
+            <TextView
+                android:id="@+id/step_desc_tv"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginBottom="@dimen/detail_step_description_margin_bottom"
+                android:layout_marginEnd="@dimen/detail_step_description_margin"
+                android:layout_marginLeft="@dimen/detail_step_description_margin"
+                android:layout_marginRight="@dimen/detail_step_description_margin"
+                android:layout_marginStart="@dimen/detail_step_description_margin"
+                android:layout_marginTop="@dimen/detail_step_description_margin"
+                android:textAppearance="@style/TextAppearance.AppCompat.Medium"
+                app:layout_constraintBottom_toTopOf="@+id/text_to_control_divider"
+                app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintStart_toStartOf="parent"
+                tools:text="Description for a single step" />
+
+        </LinearLayout>
+    </ScrollView>
+
     <android.support.constraint.Guideline
         android:id="@+id/text_to_control_divider"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:orientation="horizontal"
-        app:layout_constraintGuide_percent="0.9" />
+        app:layout_constraintGuide_percent="0.84" />
 
     <Button
         android:id="@+id/prev_btn"
@@ -48,55 +98,5 @@
         android:layout_height="wrap_content"
         android:orientation="vertical"
         app:layout_constraintGuide_percent="0.5" />
-
-    <ScrollView
-        android:layout_width="@dimen/responsive_size"
-        android:layout_height="@dimen/responsive_size"
-        android:layout_marginBottom="@dimen/recipe_detail_main_content_margin"
-        android:layout_marginEnd="@dimen/recipe_detail_main_content_margin"
-        android:layout_marginStart="@dimen/recipe_detail_main_content_margin"
-        android:layout_marginTop="@dimen/recipe_detail_main_content_margin"
-        app:layout_constraintBottom_toTopOf="@id/text_to_control_divider"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toTopOf="parent"
-        app:layout_constraintVertical_bias="0.0">
-
-        <LinearLayout
-            android:id="@+id/linear_layout"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:orientation="vertical">
-
-            <com.google.android.exoplayer2.ui.SimpleExoPlayerView
-                android:id="@+id/video_player"
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:layout_marginEnd="@dimen/exo_player_margin"
-                android:layout_marginStart="@dimen/exo_player_margin"
-                android:layout_marginTop="@dimen/exo_player_margin"
-                android:minHeight="@android:dimen/thumbnail_height"
-                app:layout_constraintEnd_toEndOf="parent"
-                app:layout_constraintStart_toStartOf="parent"
-                app:layout_constraintTop_toTopOf="parent" />
-
-            <TextView
-                android:id="@+id/step_desc_tv"
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:layout_marginBottom="@dimen/detail_step_description_margin_bottom"
-                android:layout_marginEnd="@dimen/detail_step_description_margin"
-                android:layout_marginLeft="@dimen/detail_step_description_margin"
-                android:layout_marginRight="@dimen/detail_step_description_margin"
-                android:layout_marginStart="@dimen/detail_step_description_margin"
-                android:layout_marginTop="@dimen/detail_step_description_margin"
-                android:textAppearance="@style/TextAppearance.AppCompat.Medium"
-                app:layout_constraintBottom_toTopOf="@+id/text_to_control_divider"
-                app:layout_constraintEnd_toEndOf="parent"
-                app:layout_constraintStart_toStartOf="parent"
-                tools:text="Description for a single step" />
-
-        </LinearLayout>
-    </ScrollView>
 
 </android.support.constraint.ConstraintLayout>

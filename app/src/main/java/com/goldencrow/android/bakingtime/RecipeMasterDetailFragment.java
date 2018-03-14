@@ -34,9 +34,12 @@ import com.squareup.picasso.Target;
 import java.util.Random;
 
 /**
- * Created by Philipp
+ *
+ *
+ * @author Philipp Hermüller
+ * @version 2018.3.14
+ * @since 1.0
  */
-
 public class RecipeMasterDetailFragment extends Fragment {
 
     private final String TAG = this.getClass().getSimpleName();
@@ -121,8 +124,8 @@ public class RecipeMasterDetailFragment extends Fragment {
                         new LinearLayout.LayoutParams(
                                 ViewGroup.LayoutParams.WRAP_CONTENT,
                                 ViewGroup.LayoutParams.WRAP_CONTENT));
-                mExoPlayerView.setUseController(false);
             }
+            mExoPlayerView.setUseController(false);
 
             requestCreator
                     .into(new Target() {

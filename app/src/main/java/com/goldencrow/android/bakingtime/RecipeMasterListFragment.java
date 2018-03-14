@@ -19,9 +19,12 @@ import com.goldencrow.android.bakingtime.entities.Recipe;
 import com.goldencrow.android.bakingtime.entities.Step;
 
 /**
- * Created by Philipp
+ *
+ *
+ * @author Philipp Hermüller
+ * @version 2018.3.14
+ * @since 1.0
  */
-
 public class RecipeMasterListFragment extends Fragment {
 
     private OnStepClickListener mCallback;

@@ -5,9 +5,12 @@ import android.os.Parcelable;
 import android.support.annotation.NonNull;
 
 /**
- * Created by Philipp
+ * This class resembles the Json acquired from the API.
+ *
+ * @author Philipp Hermüller
+ * @version 2018.3.14
+ * @since 1.0
  */
-
 public class Step implements Parcelable, Comparable<Step> {
 
     private int id;
@@ -74,6 +77,12 @@ public class Step implements Parcelable, Comparable<Step> {
         parcel.writeString(thumbnailURL);
     }
 
+    /**
+     * The steps of the recipe have to be in the right order.
+     *
+     * @param step  the step which this step will be compared to.
+     * @return      if this step or the passed step is before, after or equal.
+     */
     @Override
     public int compareTo(@NonNull Step step) {
         if (this.getId() < step.getId()) {

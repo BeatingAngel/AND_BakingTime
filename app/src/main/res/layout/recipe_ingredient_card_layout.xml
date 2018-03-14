@@ -1,16 +1,15 @@
 <?xml version="1.0" encoding="utf-8"?>
 <android.support.constraint.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
-    xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="wrap_content">
 
     <android.support.v7.widget.CardView
         android:id="@+id/cardView"
         android:layout_width="match_parent"
-        android:layout_height="60dp"
-        android:layout_marginBottom="8dp"
-        android:layout_marginTop="8dp"
+        android:layout_height="@dimen/ingredient_step_card_height"
+        android:layout_marginBottom="@dimen/ingredient_step_card_vertical_margin"
+        android:layout_marginTop="@dimen/ingredient_step_card_vertical_margin"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
@@ -22,13 +21,13 @@
 
             <TextView
                 android:id="@+id/ingredients_step_tv"
-                android:layout_width="0dp"
+                android:layout_width="@dimen/responsive_size"
                 android:layout_height="wrap_content"
-                android:layout_marginBottom="8dp"
-                android:layout_marginEnd="16dp"
-                android:layout_marginStart="16dp"
-                android:layout_marginTop="8dp"
-                android:text="Ingredients"
+                android:layout_marginBottom="@dimen/ingredient_step_card_text_vertical_margin"
+                android:layout_marginEnd="@dimen/ingredient_step_card_text_horizontal_margin"
+                android:layout_marginStart="@dimen/ingredient_step_card_text_horizontal_margin"
+                android:layout_marginTop="@dimen/ingredient_step_card_text_vertical_margin"
+                android:text="@string/ingredients"
                 android:textAppearance="@style/TextAppearance.AppCompat.Medium"
                 app:layout_constraintBottom_toBottomOf="parent"
                 app:layout_constraintEnd_toEndOf="parent"

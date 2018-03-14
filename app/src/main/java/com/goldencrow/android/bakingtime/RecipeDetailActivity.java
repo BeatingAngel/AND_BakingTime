@@ -1,7 +1,6 @@
 package com.goldencrow.android.bakingtime;
 
 import android.content.Intent;
-import android.content.res.Configuration;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 
@@ -12,13 +11,19 @@ import com.goldencrow.android.bakingtime.utils.EntityUtil;
 import java.util.ArrayList;
 import java.util.Arrays;
 
+/**
+ *
+ *
+ * @author Philipp Hermüller
+ * @version 2018.3.14
+ * @since 1.0
+ */
 public class RecipeDetailActivity extends AppCompatActivity
         implements RecipeMasterListFragment.OnStepClickListener {
 
     public static final String RECIPE_KEY = "RECIPE_KEY";
     public static final String RECIPE_STEPS_KEY = "STEP_KEY";
     public static final String RECIPE_STEP_POS_KEY = "STEP_POS_KEY";
-    public static final String RECIPE_INGREDIENTS_KEY = "INGREDIENTS_KEY";
 
     RecipeMasterListFragment mMasterListFragment;
 
