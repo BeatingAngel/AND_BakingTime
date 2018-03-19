@@ -103,7 +103,7 @@ public class RecipeMasterDetailFragment extends Fragment {
     int mPos;
 
     /**
-     *
+     * Sets up the UI and initializes the variables.
      *
      * @param inflater              inflates the view into the UI.
      * @param container             the container which will hold this fragment.
