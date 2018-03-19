@@ -33,11 +33,8 @@ import com.squareup.picasso.Target;
 import java.util.ArrayList;
 import java.util.Random;
 
-import static com.goldencrow.android.bakingtime.RecipeDetailActivity.RECIPE_STEPS_KEY;
-import static com.goldencrow.android.bakingtime.RecipeDetailActivity.RECIPE_STEP_POS_KEY;
-
 /**
- *
+ * The recipe step detail view for the phone.
  *
  * @author Philipp Hermüller
  * @version 2018.3.14
@@ -45,7 +42,16 @@ import static com.goldencrow.android.bakingtime.RecipeDetailActivity.RECIPE_STEP
  */
 public class RecipeStepActivity extends AppCompatActivity {
 
+    /**
+     * The Debug-Tag used for logging errors, warning, .... in this class.
+     */
     private final String TAG = this.getClass().getSimpleName();
+
+    /**
+     *
+     */
+    public static final String RECIPE_STEPS_KEY = "STEP_KEY";
+    public static final String RECIPE_STEP_POS_KEY = "STEP_POS_KEY";
 
     SimpleExoPlayerView mExoPlayerView;
     SimpleExoPlayer mExoPlayer;

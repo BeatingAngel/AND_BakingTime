@@ -34,7 +34,7 @@ import com.squareup.picasso.Target;
 import java.util.Random;
 
 /**
- *
+ * Displays the details of a recipe step.
  *
  * @author Philipp Hermüller
  * @version 2018.3.14
@@ -42,22 +42,75 @@ import java.util.Random;
  */
 public class RecipeMasterDetailFragment extends Fragment {
 
+    /**
+     * The Debug-Tag used for logging errors, warning, .... in this class.
+     */
     private final String TAG = this.getClass().getSimpleName();
+
+    /**
+     * Key used to store the array of recipe steps in.
+     * <p>
+     * The reason why all steps are sent is that so that the navigation to the next and previous
+     * step works.
+     */
     private static final String STEPS_KEY = "steps";
+
+    /**
+     * Key used to store the current position of the step-list.
+     */
     private static final String POS_KEY = "pos";
 
+    /**
+     * The UI Element which displays a video, thumbnail or image additionally to the recipe step
+     * description as visual help.
+     */
     SimpleExoPlayerView mExoPlayerView;
+
+    /**
+     * The Exo Player handles the video for the mExoPlayerView.
+     */
     SimpleExoPlayer mExoPlayer;
 
+    /**
+     * Contains the recipe step description.
+     */
     TextView mStepDescriptionTv;
+
+    /**
+     * The LinearLayout changes orientation if no video or thumbnail are available.
+     * The reason for this is the size of the default image which will be displayed instead.
+     */
     LinearLayout mLinearLayout;
 
+    /**
+     * Navigates to the previous recipe step if there is one.
+     */
     Button mPreviousBtn;
+
+    /**
+     * Navigates to the next recipe step if there is one.
+     */
     Button mNextBtn;
 
+    /**
+     * Contains all recipe steps for the navigation.
+     */
     Step[] mSteps;
+
+    /**
+     * Contains the current position which is displayed from the array of recipe steps.
+     */
     int mPos;
 
+    /**
+     *
+     *
+     * @param inflater              inflates the view into the UI.
+     * @param container             the container which will hold this fragment.
+     * @param savedInstanceState    contains the saved variables over state changes.
+     *                              In this case, the array of recipe steps and the current position.
+     * @return                      the newly inflated/created View.
+     */
     @Nullable
     @Override
     public View onCreateView(LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
@@ -72,6 +125,7 @@ public class RecipeMasterDetailFragment extends Fragment {
         mPreviousBtn.setVisibility(View.INVISIBLE);
         mNextBtn.setVisibility(View.INVISIBLE);
 
+        // only TRUE if the orientation changed. See #onSaveInstanceState()
         if (savedInstanceState != null) {
             mSteps = (Step[]) savedInstanceState.getParcelableArray(STEPS_KEY);
             mPos = savedInstanceState.getInt(POS_KEY);
@@ -83,6 +137,9 @@ public class RecipeMasterDetailFragment extends Fragment {
         return view;
     }
 
+    /**
+     * If the fragment is deleted, then clean up the ExoPlayer.
+     */
     @Override
     public void onDetach() {
         super.onDetach();
@@ -90,6 +147,12 @@ public class RecipeMasterDetailFragment extends Fragment {
         releasePlayer();
     }
 
+    /**
+     * If the orientation changes, save the important variables to recreate the current environment
+     * after the orientation change.
+     *
+     * @param outState  contains the variables which shall be remembered.
+     */
     @Override
     public void onSaveInstanceState(Bundle outState) {
         super.onSaveInstanceState(outState);
@@ -98,23 +161,34 @@ public class RecipeMasterDetailFragment extends Fragment {
         outState.putInt(POS_KEY, mPos);
     }
 
+    /**
+     * Initializes the variables which hold information of the recipe.
+     *
+     * @param steps the array of recipe steps in this recipe.
+     * @param pos   the current position in the array which is displayed.
+     */
     public void setData(Step[] steps, int pos) {
         mSteps = steps;
         mPos = pos;
     }
 
+    /**
+     * Updates the UI so that all the information from #setData() will now be displayed.
+     */
     public void updateUI() {
         Step step = mSteps[mPos];
 
         mStepDescriptionTv.setText(step.getDescription());
 
+        // If there is a video, display it!
         if (step.getVideoURL() != null && !step.getVideoURL().isEmpty()) {
             updatePlayer(Uri.parse(step.getVideoURL()));
         } else {
             RequestCreator requestCreator;
+            // If there is a thumbnail, display it!
             if (step.getThumbnailURL() != null && !step.getThumbnailURL().isEmpty()) {
                 requestCreator = Picasso.with(getContext()).load(step.getThumbnailURL());
-            } else {
+            } else { // If there is nothing, display the default image of a cook.
                 Random random = new Random();
                 int r = random.nextInt() % 2;
                 int resourceId = r == 0 ? R.drawable.cook_01 : R.drawable.cook_02;
@@ -127,6 +201,7 @@ public class RecipeMasterDetailFragment extends Fragment {
             }
             mExoPlayerView.setUseController(false);
 
+            // Display the image from the web. If an error occurred, log it!
             requestCreator
                     .into(new Target() {
                         @Override
@@ -147,6 +222,9 @@ public class RecipeMasterDetailFragment extends Fragment {
         }
     }
 
+    /**
+     * Sets up the default parameters for the ExoPlayer.
+     */
     private void initializePlayer() {
         TrackSelector trackSelector = new DefaultTrackSelector();
         LoadControl loadControl = new DefaultLoadControl();
@@ -154,6 +232,11 @@ public class RecipeMasterDetailFragment extends Fragment {
         mExoPlayerView.setPlayer(mExoPlayer);
     }
 
+    /**
+     * Updates the ExoPlayer to display the new Uri in the ExoPlayerView.
+     *
+     * @param uri   the uri to the resource which will be displayed.
+     */
     private void updatePlayer(Uri uri) {
         String userAgent = Util.getUserAgent(getContext(), "BakingTime");
         MediaSource mediaSource = new ExtractorMediaSource(uri, new DefaultDataSourceFactory(
@@ -163,6 +246,9 @@ public class RecipeMasterDetailFragment extends Fragment {
         mExoPlayer.setPlayWhenReady(true);
     }
 
+    /**
+     * cleans up the ExoPlayer.
+     */
     private void releasePlayer() {
         mExoPlayer.stop();
         mExoPlayer.release();
