@@ -1,5 +1,6 @@
 package com.goldencrow.android.bakingtime;
 
+import android.content.Intent;
 import android.graphics.Bitmap;
 import android.graphics.drawable.Drawable;
 import android.net.Uri;
@@ -103,6 +104,11 @@ public class RecipeMasterDetailFragment extends Fragment {
     int mPos;
 
     /**
+     * is TRUE if the current device is a tablet and FALSE if it is a phone.
+     */
+    boolean mIsTablet = false;
+
+    /**
      * Sets up the UI and initializes the variables.
      *
      * @param inflater              inflates the view into the UI.
@@ -116,23 +122,49 @@ public class RecipeMasterDetailFragment extends Fragment {
     public View onCreateView(LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
         View view = inflater.inflate(R.layout.fragment_recipe_master_detail, container, false);
 
+        mIsTablet = getResources().getBoolean(R.bool.isTablet);
+
         mStepDescriptionTv = view.findViewById(R.id.step_desc_tv);
         mExoPlayerView = view.findViewById(R.id.video_player);
         mLinearLayout = view.findViewById(R.id.linear_layout);
         mPreviousBtn = view.findViewById(R.id.prev_btn);
         mNextBtn = view.findViewById(R.id.next_btn);
 
-        mPreviousBtn.setVisibility(View.INVISIBLE);
-        mNextBtn.setVisibility(View.INVISIBLE);
+        // Set up the Previous- and Next-Navigation-Buttons.
+        if (mIsTablet) {
+            mPreviousBtn.setVisibility(View.GONE);
+            mNextBtn.setVisibility(View.GONE);
+        } else {
+            mPreviousBtn.setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View view) {
+                    if (mPos > 0) {
+                        mPos--;
+                        changeDetailFragment();
+                    }
+                }
+            });
+            mNextBtn.setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View view) {
+                    if (mPos < mSteps.length - 1) {
+                        mPos++;
+                        changeDetailFragment();
+                    }
+                }
+            });
+        }
 
-        // only TRUE if the orientation changed. See #onSaveInstanceState()
+        // TRUE if the orientation changed. See #onSaveInstanceState()
         if (savedInstanceState != null) {
             mSteps = (Step[]) savedInstanceState.getParcelableArray(STEPS_KEY);
             mPos = savedInstanceState.getInt(POS_KEY);
         }
 
-        initializePlayer();
-        updateUI();
+        if (mExoPlayer == null) {
+            initializePlayer();
+            updateUI();
+        }
 
         return view;
     }
@@ -141,8 +173,8 @@ public class RecipeMasterDetailFragment extends Fragment {
      * If the fragment is deleted, then clean up the ExoPlayer.
      */
     @Override
-    public void onDetach() {
-        super.onDetach();
+    public void onDestroy() {
+        super.onDestroy();
 
         releasePlayer();
     }
@@ -159,6 +191,19 @@ public class RecipeMasterDetailFragment extends Fragment {
 
         outState.putParcelableArray(STEPS_KEY, mSteps);
         outState.putInt(POS_KEY, mPos);
+    }
+
+    /**
+     * changes the currently displayed Detail Fragment to the one which is selected through the
+     * navigation buttons.
+     *
+     * @see #onCreateView(LayoutInflater, ViewGroup, Bundle)
+     */
+    private void changeDetailFragment() {
+        RecipeMasterDetailFragment masterDetailFragment = new RecipeMasterDetailFragment();
+        masterDetailFragment.setData(mSteps, mPos);
+
+        ((RecipeStepActivity) getActivity()).changeDetailFragment(masterDetailFragment);
     }
 
     /**
@@ -179,6 +224,14 @@ public class RecipeMasterDetailFragment extends Fragment {
         Step step = mSteps[mPos];
 
         mStepDescriptionTv.setText(step.getDescription());
+        if (!mIsTablet) {
+            if (mPos == 0) {
+                mPreviousBtn.setVisibility(View.INVISIBLE);
+            }
+            if (mPos == mSteps.length - 1) {
+                mNextBtn.setVisibility(View.INVISIBLE);
+            }
+        }
 
         // If there is a video, display it!
         if (step.getVideoURL() != null && !step.getVideoURL().isEmpty()) {
@@ -193,11 +246,19 @@ public class RecipeMasterDetailFragment extends Fragment {
                 int r = random.nextInt() % 2;
                 int resourceId = r == 0 ? R.drawable.cook_01 : R.drawable.cook_02;
                 requestCreator = Picasso.with(getContext()).load(resourceId);
-                mLinearLayout.setOrientation(LinearLayout.HORIZONTAL);
-                mExoPlayerView.setLayoutParams(
-                        new LinearLayout.LayoutParams(
-                                ViewGroup.LayoutParams.WRAP_CONTENT,
-                                ViewGroup.LayoutParams.WRAP_CONTENT));
+
+                if (mIsTablet) {
+                    mLinearLayout.setOrientation(LinearLayout.HORIZONTAL);
+                    mExoPlayerView.setLayoutParams(
+                            new LinearLayout.LayoutParams(
+                                    ViewGroup.LayoutParams.WRAP_CONTENT,
+                                    ViewGroup.LayoutParams.WRAP_CONTENT));
+                } else {
+                    ViewGroup.LayoutParams params = mExoPlayerView.getLayoutParams();
+                    params.height = (int) getResources()
+                            .getDimension(R.dimen.exoplayer_default_pic_phone_height);
+                    mExoPlayerView.setLayoutParams(params);
+                }
             }
             mExoPlayerView.setUseController(false);
 
