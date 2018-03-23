@@ -56,6 +56,11 @@ public class RecipeStepActivity extends AppCompatActivity {
     public static final String RECIPE_STEP_POS_KEY = "STEP_POS_KEY";
 
     /**
+     * Displays the details from a recipe step as a fragment.
+     */
+    RecipeMasterDetailFragment mMasterDetailFragment;
+
+    /**
      * Sets up the UI and initializes the variables.
      *
      * @param savedInstanceState    contains the saved variables over state changes.
@@ -70,18 +75,24 @@ public class RecipeStepActivity extends AppCompatActivity {
         if (intent != null && intent.hasExtra(RECIPE_STEPS_KEY)) {
             ArrayList<Step> stepsList = intent.getParcelableArrayListExtra(RECIPE_STEPS_KEY);
             int pos = intent.getIntExtra(RECIPE_STEP_POS_KEY, 0);
+            if (savedInstanceState != null) {
+                pos = savedInstanceState.getInt(RECIPE_STEP_POS_KEY);
+            }
 
-            RecipeMasterDetailFragment masterDetailFragment = new RecipeMasterDetailFragment();
+            mMasterDetailFragment = new RecipeMasterDetailFragment();
             Step[] stepArr = new Step[stepsList.size()];
             stepArr = stepsList.toArray(stepArr);
-            masterDetailFragment.setData(stepArr, pos);
+            mMasterDetailFragment.setData(stepArr, pos);
 
-            // Change the fragment to display the newly selected recipe step.
-            getSupportFragmentManager()
-                    .beginTransaction()
-                    .add(R.id.master_detail_container, masterDetailFragment)
-                    .commit();
+            changeDetailFragment(mMasterDetailFragment);
         }
+    }
+
+    @Override
+    protected void onSaveInstanceState(Bundle outState) {
+        super.onSaveInstanceState(outState);
+
+        outState.putInt(RECIPE_STEP_POS_KEY, mMasterDetailFragment.getPos());
     }
 
     /**

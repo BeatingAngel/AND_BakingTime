@@ -1,11 +1,15 @@
 package com.goldencrow.android.bakingtime;
 
 import android.content.Intent;
+import android.content.res.Configuration;
 import android.graphics.Bitmap;
 import android.graphics.drawable.Drawable;
+import android.media.session.PlaybackState;
 import android.net.Uri;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
+import android.support.constraint.ConstraintLayout;
+import android.support.constraint.Guideline;
 import android.support.v4.app.Fragment;
 import android.util.Log;
 import android.view.LayoutInflater;
@@ -34,6 +38,8 @@ import com.squareup.picasso.Target;
 
 import java.util.Random;
 
+import static android.view.ViewGroup.LayoutParams.MATCH_PARENT;
+
 /**
  * Displays the details of a recipe step.
  *
@@ -54,12 +60,22 @@ public class RecipeMasterDetailFragment extends Fragment {
      * The reason why all steps are sent is that so that the navigation to the next and previous
      * step works.
      */
-    private static final String STEPS_KEY = "steps";
+    private static final String STEPS_KEY = "recipe_steps_key";
 
     /**
      * Key used to store the current position of the step-list.
      */
-    private static final String POS_KEY = "pos";
+    private static final String POS_KEY = "pos_in_steps_key";
+
+    /**
+     * Key to the stored position of the video.
+     */
+    private static final String VID_POS_KEY = "video_position_key";
+
+    /**
+     * Key to the stored variables of the state of the video.
+     */
+    private static final String VID_STATE_KEY = "video_state_key";
 
     /**
      * The UI Element which displays a video, thumbnail or image additionally to the recipe step
@@ -104,6 +120,16 @@ public class RecipeMasterDetailFragment extends Fragment {
     int mPos;
 
     /**
+     * The position in which the player from the video is currently located at (minute).
+     */
+    Long mVideoPosition;
+
+    /**
+     * The state in which the player is in (PLAY, PAUSE, STOPPED,...)
+     */
+    Integer mVideoState;
+
+    /**
      * is TRUE if the current device is a tablet and FALSE if it is a phone.
      */
     boolean mIsTablet = false;
@@ -123,6 +149,7 @@ public class RecipeMasterDetailFragment extends Fragment {
         View view = inflater.inflate(R.layout.fragment_recipe_master_detail, container, false);
 
         mIsTablet = getResources().getBoolean(R.bool.isTablet);
+        int orientation = getResources().getConfiguration().orientation;
 
         mStepDescriptionTv = view.findViewById(R.id.step_desc_tv);
         mExoPlayerView = view.findViewById(R.id.video_player);
@@ -131,9 +158,20 @@ public class RecipeMasterDetailFragment extends Fragment {
         mNextBtn = view.findViewById(R.id.next_btn);
 
         // Set up the Previous- and Next-Navigation-Buttons.
-        if (mIsTablet) {
+        if (mIsTablet || orientation == Configuration.ORIENTATION_LANDSCAPE) {
             mPreviousBtn.setVisibility(View.GONE);
             mNextBtn.setVisibility(View.GONE);
+
+            Guideline guideline = view.findViewById(R.id.text_to_control_divider);
+            ConstraintLayout.LayoutParams params = (ConstraintLayout.LayoutParams) guideline.getLayoutParams();
+            params.guidePercent = 1;
+            guideline.setLayoutParams(params);
+
+            if (orientation == Configuration.ORIENTATION_LANDSCAPE && !mIsTablet) {
+                ViewGroup.LayoutParams videoParams = mExoPlayerView.getLayoutParams();
+                videoParams.height = MATCH_PARENT;
+                mExoPlayerView.setLayoutParams(videoParams);
+            }
         } else {
             mPreviousBtn.setOnClickListener(new View.OnClickListener() {
                 @Override
@@ -159,11 +197,20 @@ public class RecipeMasterDetailFragment extends Fragment {
         if (savedInstanceState != null) {
             mSteps = (Step[]) savedInstanceState.getParcelableArray(STEPS_KEY);
             mPos = savedInstanceState.getInt(POS_KEY);
+            mVideoPosition = savedInstanceState.getLong(VID_POS_KEY);
+            mVideoState = savedInstanceState.getInt(VID_STATE_KEY);
         }
 
         if (mExoPlayer == null) {
             initializePlayer();
             updateUI();
+        } else if (mVideoPosition != null && mVideoState != null) {
+            mExoPlayer.seekTo(mVideoPosition);
+            if (mVideoState == PlaybackState.STATE_PAUSED || mVideoState == PlaybackState.STATE_STOPPED) {
+                mExoPlayer.setPlayWhenReady(false);
+            } else {
+                mExoPlayer.setPlayWhenReady(true);
+            }
         }
 
         return view;
@@ -173,8 +220,8 @@ public class RecipeMasterDetailFragment extends Fragment {
      * If the fragment is deleted, then clean up the ExoPlayer.
      */
     @Override
-    public void onDestroy() {
-        super.onDestroy();
+    public void onDetach() {
+        super.onDetach();
 
         releasePlayer();
     }
@@ -191,6 +238,8 @@ public class RecipeMasterDetailFragment extends Fragment {
 
         outState.putParcelableArray(STEPS_KEY, mSteps);
         outState.putInt(POS_KEY, mPos);
+        outState.putLong(VID_POS_KEY, mExoPlayer.getCurrentPosition());
+        outState.putInt(VID_STATE_KEY, mExoPlayer.getPlaybackState());
     }
 
     /**
@@ -215,6 +264,15 @@ public class RecipeMasterDetailFragment extends Fragment {
     public void setData(Step[] steps, int pos) {
         mSteps = steps;
         mPos = pos;
+    }
+
+    /**
+     * Returns the position in the step-Array which is currently displayed.
+     *
+     * @return  the position in the step-Array.
+     */
+    public int getPos() {
+        return mPos;
     }
 
     /**
@@ -304,7 +362,15 @@ public class RecipeMasterDetailFragment extends Fragment {
                 getContext(), userAgent),
                 new DefaultExtractorsFactory(), null, null);
         mExoPlayer.prepare(mediaSource);
-        mExoPlayer.setPlayWhenReady(true);
+
+        boolean playWhenReady = true;
+        if (mVideoPosition != null && mVideoState != null) {
+            mExoPlayer.seekTo(mVideoPosition);
+            if (mVideoState == PlaybackState.STATE_PAUSED || mVideoState == PlaybackState.STATE_STOPPED) {
+                playWhenReady = false;
+            }
+        }
+        mExoPlayer.setPlayWhenReady(playWhenReady);
     }
 
     /**
