@@ -109,10 +109,17 @@ public class RecipeStepAdapter extends RecyclerView.Adapter<RecipeStepAdapter.Re
      */
     @Override
     public void onBindViewHolder(RecipeStepViewHolder holder, int position) {
+        int ingredientsAndIntroSpace = 1;
 
         if (holder.mViewType == RECIPE_STEP_VIEW_TYPE) {
             Step step = mSteps[position - 1];
             holder.mStepDescTv.setText(step.getShortDescription());
+            if (position > 1) {
+                String stepCount = Integer.toString(position - ingredientsAndIntroSpace);
+                holder.mStepBadgeTv.setText(stepCount);
+            } else {
+                holder.mStepBadgeTv.setVisibility(View.GONE);
+            }
         }
     }
 
@@ -123,7 +130,12 @@ public class RecipeStepAdapter extends RecyclerView.Adapter<RecipeStepAdapter.Re
      */
     @Override
     public int getItemCount() {
-        return mSteps != null ? mSteps.length : 0;
+        int space_for_ingredient_card = 1;
+
+        if (mSteps != null) {
+            return mSteps.length + space_for_ingredient_card;
+        }
+        return 0;
     }
 
     /**
@@ -163,6 +175,7 @@ public class RecipeStepAdapter extends RecyclerView.Adapter<RecipeStepAdapter.Re
 
         int mViewType;
 
+        TextView mStepBadgeTv;
         TextView mStepDescTv;
 
         /**
@@ -176,6 +189,7 @@ public class RecipeStepAdapter extends RecyclerView.Adapter<RecipeStepAdapter.Re
 
             this.mViewType = viewType;
 
+            mStepBadgeTv = itemView.findViewById(R.id.step_badge_tv);
             mStepDescTv = itemView.findViewById(R.id.recipe_step_desc_tv);
 
             itemView.setOnClickListener(this);

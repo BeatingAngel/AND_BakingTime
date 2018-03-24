@@ -1,6 +1,5 @@
 package com.goldencrow.android.bakingtime;
 
-import android.content.Intent;
 import android.content.res.Configuration;
 import android.graphics.Bitmap;
 import android.graphics.drawable.Drawable;
@@ -16,7 +15,9 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.Button;
+import android.widget.ImageView;
 import android.widget.LinearLayout;
+import android.widget.ScrollView;
 import android.widget.TextView;
 
 import com.goldencrow.android.bakingtime.entities.Step;
@@ -37,6 +38,9 @@ import com.squareup.picasso.RequestCreator;
 import com.squareup.picasso.Target;
 
 import java.util.Random;
+
+import butterknife.BindView;
+import butterknife.ButterKnife;
 
 import static android.view.ViewGroup.LayoutParams.MATCH_PARENT;
 
@@ -81,6 +85,7 @@ public class RecipeMasterDetailFragment extends Fragment {
      * The UI Element which displays a video, thumbnail or image additionally to the recipe step
      * description as visual help.
      */
+    @BindView(R.id.video_player)
     SimpleExoPlayerView mExoPlayerView;
 
     /**
@@ -89,25 +94,61 @@ public class RecipeMasterDetailFragment extends Fragment {
     SimpleExoPlayer mExoPlayer;
 
     /**
-     * Contains the recipe step description.
+     * Contains the recipe step description in the layout where the video is located at.
      */
-    TextView mStepDescriptionTv;
+    @BindView(R.id.video_step_desc_tv)
+    TextView mVideoStepDescriptionTv;
+
+    /**
+     * Contains the recipe step description in the layout where the image is located at.
+     */
+    @BindView(R.id.image_step_desc_tv)
+    TextView mImageStepDescriptionTv;
+
+    /**
+     * Displays a default image of a cook.
+     */
+    @BindView(R.id.cook_iv)
+    ImageView mCookIv;
 
     /**
      * The LinearLayout changes orientation if no video or thumbnail are available.
      * The reason for this is the size of the default image which will be displayed instead.
      */
-    LinearLayout mLinearLayout;
+    @BindView(R.id.video_detail_layout)
+    LinearLayout mVideoLinearLayout;
 
     /**
      * Navigates to the previous recipe step if there is one.
      */
+    @BindView(R.id.prev_btn)
     Button mPreviousBtn;
 
     /**
      * Navigates to the next recipe step if there is one.
      */
+    @BindView(R.id.next_btn)
     Button mNextBtn;
+
+    /**
+     * The Guideline which separates the navigation buttons from the step detail information.
+     */
+    @BindView(R.id.text_to_control_divider)
+    Guideline mGuideline;
+
+    /**
+     * The ScrollView which contains the detail information view of a step if a video is
+     * available.
+     */
+    @BindView(R.id.video_scroll_view)
+    ScrollView mVideoScrollView;
+
+    /**
+     * The ScrollView which contains the detail information view of a step
+     * if no video, but a image, is available.
+     */
+    @BindView(R.id.image_scroll_view)
+    ScrollView mImageScrollView;
 
     /**
      * Contains all recipe steps for the navigation.
@@ -151,21 +192,11 @@ public class RecipeMasterDetailFragment extends Fragment {
         mIsTablet = getResources().getBoolean(R.bool.isTablet);
         int orientation = getResources().getConfiguration().orientation;
 
-        mStepDescriptionTv = view.findViewById(R.id.step_desc_tv);
-        mExoPlayerView = view.findViewById(R.id.video_player);
-        mLinearLayout = view.findViewById(R.id.linear_layout);
-        mPreviousBtn = view.findViewById(R.id.prev_btn);
-        mNextBtn = view.findViewById(R.id.next_btn);
+        ButterKnife.bind(this, view);
 
         // Set up the Previous- and Next-Navigation-Buttons.
         if (mIsTablet || orientation == Configuration.ORIENTATION_LANDSCAPE) {
-            mPreviousBtn.setVisibility(View.GONE);
-            mNextBtn.setVisibility(View.GONE);
-
-            Guideline guideline = view.findViewById(R.id.text_to_control_divider);
-            ConstraintLayout.LayoutParams params = (ConstraintLayout.LayoutParams) guideline.getLayoutParams();
-            params.guidePercent = 1;
-            guideline.setLayoutParams(params);
+            hideNavigationButtons();
 
             if (orientation == Configuration.ORIENTATION_LANDSCAPE && !mIsTablet) {
                 ViewGroup.LayoutParams videoParams = mExoPlayerView.getLayoutParams();
@@ -217,7 +248,7 @@ public class RecipeMasterDetailFragment extends Fragment {
     }
 
     /**
-     * If the fragment is deleted, then clean up the ExoPlayer.
+     * If the fragment is removed, then clean up the ExoPlayer.
      */
     @Override
     public void onDetach() {
@@ -240,6 +271,20 @@ public class RecipeMasterDetailFragment extends Fragment {
         outState.putInt(POS_KEY, mPos);
         outState.putLong(VID_POS_KEY, mExoPlayer.getCurrentPosition());
         outState.putInt(VID_STATE_KEY, mExoPlayer.getPlaybackState());
+    }
+
+    /**
+     * Hides the navigation buttons (PREV, NEXT) from the UI without
+     * having blank spaces.
+     */
+    private void hideNavigationButtons() {
+        mPreviousBtn.setVisibility(View.GONE);
+        mNextBtn.setVisibility(View.GONE);
+
+        ConstraintLayout.LayoutParams params =
+                (ConstraintLayout.LayoutParams) mGuideline.getLayoutParams();
+        params.guidePercent = 1;
+        mGuideline.setLayoutParams(params);
     }
 
     /**
@@ -281,12 +326,16 @@ public class RecipeMasterDetailFragment extends Fragment {
     public void updateUI() {
         Step step = mSteps[mPos];
 
-        mStepDescriptionTv.setText(step.getDescription());
+        mVideoStepDescriptionTv.setText(step.getDescription());
+
         if (!mIsTablet) {
-            if (mPos == 0) {
+            if (mSteps.length == 1) {
                 mPreviousBtn.setVisibility(View.INVISIBLE);
-            }
-            if (mPos == mSteps.length - 1) {
+                mNextBtn.setVisibility(View.INVISIBLE);
+                hideNavigationButtons();
+            } else if (mPos == 0) {
+                mPreviousBtn.setVisibility(View.INVISIBLE);
+            } else if (mPos == mSteps.length - 1) {
                 mNextBtn.setVisibility(View.INVISIBLE);
             }
         }
@@ -295,18 +344,25 @@ public class RecipeMasterDetailFragment extends Fragment {
         if (step.getVideoURL() != null && !step.getVideoURL().isEmpty()) {
             updatePlayer(Uri.parse(step.getVideoURL()));
         } else {
+            mImageStepDescriptionTv.setText(step.getDescription());
+
             RequestCreator requestCreator;
             // If there is a thumbnail, display it!
             if (step.getThumbnailURL() != null && !step.getThumbnailURL().isEmpty()) {
                 requestCreator = Picasso.with(getContext()).load(step.getThumbnailURL());
             } else { // If there is nothing, display the default image of a cook.
+                // Hide the video-detail-view
+                mVideoScrollView.setVisibility(View.GONE);
+                mImageScrollView.setVisibility(View.VISIBLE);
+                mCookIv.setVisibility(View.VISIBLE);
+
                 Random random = new Random();
                 int r = random.nextInt() % 2;
                 int resourceId = r == 0 ? R.drawable.cook_01 : R.drawable.cook_02;
                 requestCreator = Picasso.with(getContext()).load(resourceId);
 
                 if (mIsTablet) {
-                    mLinearLayout.setOrientation(LinearLayout.HORIZONTAL);
+                    mVideoLinearLayout.setOrientation(LinearLayout.HORIZONTAL);
                     mExoPlayerView.setLayoutParams(
                             new LinearLayout.LayoutParams(
                                     ViewGroup.LayoutParams.WRAP_CONTENT,
@@ -321,23 +377,27 @@ public class RecipeMasterDetailFragment extends Fragment {
             mExoPlayerView.setUseController(false);
 
             // Display the image from the web. If an error occurred, log it!
-            requestCreator
-                    .into(new Target() {
-                        @Override
-                        public void onBitmapLoaded(Bitmap bitmap, Picasso.LoadedFrom from) {
-                            mExoPlayerView.setDefaultArtwork(bitmap);
-                        }
+            if (mImageScrollView.getVisibility() == View.GONE) {
+                requestCreator
+                        .into(new Target() {
+                            @Override
+                            public void onBitmapLoaded(Bitmap bitmap, Picasso.LoadedFrom from) {
+                                mExoPlayerView.setDefaultArtwork(bitmap);
+                            }
 
-                        @Override
-                        public void onBitmapFailed(Drawable errorDrawable) {
-                            Log.w(TAG, "Image could not be converted to Bitmap.");
-                        }
+                            @Override
+                            public void onBitmapFailed(Drawable errorDrawable) {
+                                Log.w(TAG, "Image could not be converted to Bitmap.");
+                            }
 
-                        @Override
-                        public void onPrepareLoad(Drawable placeHolderDrawable) {
+                            @Override
+                            public void onPrepareLoad(Drawable placeHolderDrawable) {
 
-                        }
-                    });
+                            }
+                        });
+            } else {
+                requestCreator.into(mCookIv);
+            }
         }
     }
 

@@ -13,4 +13,5 @@
     <string name="bookmark_image_description">bookmark image showing if the recipe is a favorite one</string>
     <string name="show_ingredients">Show ingredients</string>
     <string name="ingredients">Ingredients</string>
+    <string name="default_image_description">Displays a default image - a cook</string>
 </resources>

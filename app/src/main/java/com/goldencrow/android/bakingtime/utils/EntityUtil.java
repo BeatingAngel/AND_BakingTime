@@ -43,12 +43,14 @@ public class EntityUtil {
             } else {
                 builder.append(String.valueOf(quantity));
             }
+            builder.append(" ");
 
-            builder.append(" ");
-            builder.append(ingredient.getMeasure());
-            builder.append(" ");
+            if (!ingredient.getMeasure().toUpperCase().equals("UNIT")) {
+                builder.append(ingredient.getMeasure());
+                builder.append(" ");
+            }
+
             builder.append(ingredient.getIngredient());
-
             builder.append("\n");
         }
 

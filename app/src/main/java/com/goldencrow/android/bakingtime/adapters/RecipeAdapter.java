@@ -154,6 +154,7 @@ public class RecipeAdapter extends RecyclerView.Adapter<RecipeAdapter.RecipeView
     @Override
     public void onBindViewHolder(RecipeViewHolder holder, int position) {
         Recipe recipe = mRecipes[position];
+        int spaceForRecipeIntro = 1;
 
         // If the recipe has a thumbnail image then display it as the
         //    background image of the card.
@@ -171,7 +172,7 @@ public class RecipeAdapter extends RecyclerView.Adapter<RecipeAdapter.RecipeView
         holder.mTitleTv.setText(recipe.getName());
         holder.mBookmarkIv.setTag(recipe.getId());
         holder.mServingsTv.setText(String.valueOf(recipe.getServings()));
-        holder.mStepsTv.setText(String.valueOf(recipe.getSteps().length));
+        holder.mStepsTv.setText(String.valueOf(recipe.getSteps().length - spaceForRecipeIntro));
 
         // Set all the information for the back-side of the card into the corresponding views.
         holder.mBackCardTitleTv.setText(recipe.getName());
