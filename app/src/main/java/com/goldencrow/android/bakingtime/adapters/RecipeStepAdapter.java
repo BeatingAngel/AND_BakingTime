@@ -36,7 +36,7 @@ public class RecipeStepAdapter extends RecyclerView.Adapter<RecipeStepAdapter.Re
     /**
      * Context of the activity which initializes the RecyclerList.
      */
-    private Context mContext;
+    private final Context mContext;
 
     /**
      * Contains all steps which will be displayed in the list.
@@ -51,7 +51,7 @@ public class RecipeStepAdapter extends RecyclerView.Adapter<RecipeStepAdapter.Re
      *
      * @see RecipeStepViewHolder#onClick(View)
      */
-    private RecipeMasterListFragment.OnStepClickListener mCallback;
+    private final RecipeMasterListFragment.OnStepClickListener mCallback;
 
     /**
      * Contains the selected step from the list.
@@ -173,10 +173,10 @@ public class RecipeStepAdapter extends RecyclerView.Adapter<RecipeStepAdapter.Re
      */
     class RecipeStepViewHolder extends RecyclerView.ViewHolder implements View.OnClickListener {
 
-        int mViewType;
+        final int mViewType;
 
-        TextView mStepBadgeTv;
-        TextView mStepDescTv;
+        final TextView mStepBadgeTv;
+        final TextView mStepDescTv;
 
         /**
          * Constructor which initializes the view fields and the onClickListener.

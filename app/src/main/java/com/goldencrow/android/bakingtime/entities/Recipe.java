@@ -12,12 +12,21 @@ import android.os.Parcelable;
  */
 public class Recipe implements Parcelable {
 
-    private int id;
-    private String name;
-    private Ingredient[] ingredients;
-    private Step[] steps;
-    private int servings;
-    private String image;
+    private final int id;
+    private final String name;
+    private final Ingredient[] ingredients;
+    private final Step[] steps;
+    private final int servings;
+    private final String image;
+
+    public Recipe(int id, String name, Ingredient[] ingredients, Step[] steps, int servings, String image) {
+        this.id = id;
+        this.name = name;
+        this.ingredients = ingredients;
+        this.steps = steps;
+        this.servings = servings;
+        this.image = image;
+    }
 
     private Recipe(Parcel in) {
         id = in.readInt();

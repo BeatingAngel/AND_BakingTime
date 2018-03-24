@@ -1,7 +1,5 @@
 package com.goldencrow.android.bakingtime;
 
-import android.support.test.espresso.DataInteraction;
-import android.support.test.espresso.ViewInteraction;
 import android.support.test.espresso.contrib.RecyclerViewActions;
 import android.support.test.rule.ActivityTestRule;
 import android.support.test.runner.AndroidJUnit4;
@@ -41,7 +39,7 @@ public class MainActivityScreenTest {
     private static final int BACKGROUND_IMAGE = R.drawable.bakings;
 
     @Rule
-    public ActivityTestRule<MainActivity> mOrderActivityTestRule
+    public ActivityTestRule<MainActivity> mMainActivityTestRule
             = new ActivityTestRule<>(MainActivity.class);
 
     /**

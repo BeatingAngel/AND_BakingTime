@@ -3,10 +3,7 @@
     <string name="card_background_image_description">Card background for the recipe displaying default or specific image</string>
     <string name="servings_label">Servings:</string>
     <string name="steps_label">Steps:</string>
-    <string name="ingredients_label">Ingredients:</string>
     <string name="loading_indicator_description">Loading Indicator Logo</string>
-    <string name="appwidget_text">EXAMPLE</string>
-    <string name="add_widget">Add widget</string>
     <string name="previous_step">Previous Step</string>
     <string name="next_step">Next Step</string>
     <string name="no_image_found">No Image Found</string>

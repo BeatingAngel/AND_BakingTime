@@ -1,17 +1,12 @@
 package com.goldencrow.android.bakingtime.utils;
 
 import android.appwidget.AppWidgetManager;
-import android.content.ComponentName;
 import android.content.Context;
 import android.content.Intent;
-import android.content.SharedPreferences;
 import android.os.Bundle;
 
 import com.goldencrow.android.bakingtime.FavoriteRecipeWidget;
 import com.goldencrow.android.bakingtime.entities.Ingredient;
-import com.goldencrow.android.bakingtime.entities.Recipe;
-
-import static android.content.Context.MODE_PRIVATE;
 
 /**
  * Contains all methods which handle/alter majorly the entities.

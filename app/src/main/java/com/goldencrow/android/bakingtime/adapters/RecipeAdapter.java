@@ -64,7 +64,7 @@ public class RecipeAdapter extends RecyclerView.Adapter<RecipeAdapter.RecipeView
     /**
      * Context of the activity which initializes the RecyclerList.
      */
-    private Context mContext;
+    private final Context mContext;
 
     /**
      * Contains all steps which will be displayed in the list.
@@ -77,12 +77,12 @@ public class RecipeAdapter extends RecyclerView.Adapter<RecipeAdapter.RecipeView
     /**
      * contains the Favorite Recipe.
      */
-    private SharedPreferences mSharedPreferences;
+    private final SharedPreferences mSharedPreferences;
 
     /**
      * stores the ID from the current favorite recipe.
      */
-    private int mBookmarkId;
+    private final int mBookmarkId;
 
     /**
      * stores the entire Bookmark ImageView.
@@ -97,7 +97,7 @@ public class RecipeAdapter extends RecyclerView.Adapter<RecipeAdapter.RecipeView
      *
      * @see RecipeViewHolder#applyClickListenerToOpenRecipeDetail()
      */
-    private RecipeOnClickListener mRecipeClick;
+    private final RecipeOnClickListener mRecipeClick;
 
     /**
      * Interface for the click on the recipe-card.
@@ -262,21 +262,21 @@ public class RecipeAdapter extends RecyclerView.Adapter<RecipeAdapter.RecipeView
     class RecipeViewHolder extends RecyclerView.ViewHolder {
 
         // Sides of the card.
-        ConstraintLayout front_card_layout;
-        ConstraintLayout back_card_layout;
+        final ConstraintLayout front_card_layout;
+        final ConstraintLayout back_card_layout;
 
         // Views on the front side of the card.
-        ImageView mBackgroundImage;
-        ImageView mBookmarkIv;
-        TextView mErrorTv;
-        TextView mTitleTv;
-        TextView mServingsTv;
-        TextView mStepsTv;
-        Button mIngredientsBtn;
+        final ImageView mBackgroundImage;
+        final ImageView mBookmarkIv;
+        final TextView mErrorTv;
+        final TextView mTitleTv;
+        final TextView mServingsTv;
+        final TextView mStepsTv;
+        final Button mIngredientsBtn;
 
         // Views on the back side of the card.
-        TextView mBackCardTitleTv;
-        TextView mBackCardIngredientsTv;
+        final TextView mBackCardTitleTv;
+        final TextView mBackCardIngredientsTv;
 
         /**
          * Initializes the View's from the card-layout and applies the onClickListener's.

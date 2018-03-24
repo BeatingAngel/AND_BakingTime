@@ -12,9 +12,9 @@ import android.os.Parcelable;
  */
 public class Ingredient implements Parcelable {
 
-    private float quantity;
-    private String measure;
-    private String ingredient;
+    private final float quantity;
+    private final String measure;
+    private final String ingredient;
 
     private Ingredient(Parcel in) {
         quantity = in.readFloat();
