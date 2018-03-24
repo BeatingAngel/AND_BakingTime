@@ -40,4 +40,12 @@ dependencies {
     compile 'com.squareup.okhttp3:okhttp:3.8.0'
     compile 'com.google.android.exoplayer:exoplayer:r2.3.0'
     compile 'com.jakewharton:butterknife:8.8.1'
+
+    androidTestCompile('com.android.support.test.espresso:espresso-contrib:2.2.1') {
+        // Necessary to avoid version conflicts
+        exclude group: 'com.android.support', module: 'appcompat'
+        exclude group: 'com.android.support', module: 'support-v4'
+        exclude group: 'com.android.support', module: 'support-annotations'
+        exclude module: 'recyclerview-v7'
+    }
 }

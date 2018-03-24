@@ -139,7 +139,12 @@ public class RecipeAdapter extends RecyclerView.Adapter<RecipeAdapter.RecipeView
         View view = LayoutInflater.from(parent.getContext())
                 .inflate(R.layout.recipe_card_layout, parent, false);
 
-        return new RecipeViewHolder(view);
+        RecipeViewHolder holder = new RecipeViewHolder(view);
+
+        // store the image as tag for the espresso test.
+        holder.mBackgroundImage.setTag(R.drawable.bakings);
+
+        return holder;
     }
 
     /**
@@ -162,6 +167,8 @@ public class RecipeAdapter extends RecyclerView.Adapter<RecipeAdapter.RecipeView
             Picasso.with(mContext)
                     .load(recipe.getImage())
                     .into(holder.mBackgroundImage);
+            // store the image as tag for the espresso test.
+            holder.mBackgroundImage.setTag(recipe.getImage());
         } else {
             // , otherwise display an error-message showing that no
             //    image was found.
