@@ -34,7 +34,12 @@ public class RecipeDetailActivity extends AppCompatActivity
     /**
      * The recipe which was clicked upon.
      */
-    Recipe mRecipe;
+    private Recipe mRecipe;
+
+    /**
+     * The fragment which displays the list of steps for the recipe.
+     */
+    RecipeMasterListFragment mMasterListFragment;
 
     /**
      * Sets up the UI and variables.
@@ -52,12 +57,17 @@ public class RecipeDetailActivity extends AppCompatActivity
 
             setTitle(mRecipe.getName());
 
-            RecipeMasterListFragment masterListFragment = new RecipeMasterListFragment();
-            masterListFragment.setRecipe(mRecipe);
+            mMasterListFragment = (RecipeMasterListFragment) getSupportFragmentManager()
+                    .findFragmentByTag(RecipeMasterListFragment.class.getCanonicalName());
+            if (mMasterListFragment == null) {
+                mMasterListFragment = new RecipeMasterListFragment();
+                mMasterListFragment.setRecipe(mRecipe);
+            }
 
             getSupportFragmentManager()
                     .beginTransaction()
-                    .add(R.id.master_list_container, masterListFragment)
+                    .replace(R.id.master_list_container, mMasterListFragment,
+                            RecipeMasterListFragment.class.getCanonicalName())
                     .commit();
         }
     }

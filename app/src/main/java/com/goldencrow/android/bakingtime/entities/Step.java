@@ -39,7 +39,7 @@ public class Step implements Parcelable, Comparable<Step> {
         thumbnailURL = in.readString();
     }
 
-    static final Creator<Step> CREATOR = new Creator<Step>() {
+    public static final Creator<Step> CREATOR = new Creator<Step>() {
         @Override
         public Step createFromParcel(Parcel in) {
             return new Step(in);

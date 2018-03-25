@@ -39,6 +39,11 @@ public class MainActivity extends AppCompatActivity
     private final String TAG = this.getClass().getSimpleName();
 
     /**
+     * The key which stores the first visible item position in the list.
+     */
+    private static final String RESTORE_LIST_POSITION_KEY = "list_pos";
+
+    /**
      * The Loading Indicator (Donut) which shows that the data is still loading.
      */
     private ImageView mLoadingIndicatorIv;
@@ -53,7 +58,7 @@ public class MainActivity extends AppCompatActivity
      * The Grid in which the recipe-cards are located. The column-count will change depending on
      * the rotation of the device and if it is a tablet or phone.
      */
-    private GridLayoutManager layoutManager;
+    private GridLayoutManager mLayoutManager;
 
     /**
      * Sets up all variables and retrieves the recipes from the web to display them.
@@ -61,7 +66,7 @@ public class MainActivity extends AppCompatActivity
      * @param savedInstanceState    the saved state before the device rotation.
      */
     @Override
-    protected void onCreate(Bundle savedInstanceState) {
+    protected void onCreate(final Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
 
@@ -74,7 +79,7 @@ public class MainActivity extends AppCompatActivity
 
         // Setting up the RecyclerListView.
         int gridLayoutDefaultSpanCount = 1;
-        layoutManager = new GridLayoutManager(this, gridLayoutDefaultSpanCount);
+        mLayoutManager = new GridLayoutManager(this, gridLayoutDefaultSpanCount);
 
         // Change the column count of the grid depending on the rotation of the device and if
         //   it is a phone or tablet.
@@ -83,7 +88,7 @@ public class MainActivity extends AppCompatActivity
         // Set up the RecyclerView for usage.
         mAdapter = new RecipeAdapter(this, this);
 
-        recipeListRv.setLayoutManager(layoutManager);
+        recipeListRv.setLayoutManager(mLayoutManager);
         recipeListRv.setHasFixedSize(true);
         recipeListRv.setAdapter(mAdapter);
 
@@ -101,6 +106,10 @@ public class MainActivity extends AppCompatActivity
                 Recipe[] recipes = response.body();
                 // Set the recipes to the adapter.
                 mAdapter.setRecipes(recipes);
+                // Restore the list to the previous state if there is one.
+                if (savedInstanceState != null) {
+                    restoreListToOriginState(savedInstanceState.getInt(RESTORE_LIST_POSITION_KEY));
+                }
             }
 
             @Override
@@ -110,6 +119,13 @@ public class MainActivity extends AppCompatActivity
                 Log.w(TAG, t.getLocalizedMessage());
             }
         });
+    }
+
+    @Override
+    protected void onSaveInstanceState(Bundle outState) {
+        super.onSaveInstanceState(outState);
+
+        outState.putInt(RESTORE_LIST_POSITION_KEY, mLayoutManager.findFirstVisibleItemPosition());
     }
 
     /**
@@ -122,6 +138,15 @@ public class MainActivity extends AppCompatActivity
         super.onRestoreInstanceState(savedInstanceState);
 
         changeLayoutSpanCountFitForDevice();
+    }
+
+    /**
+     * Scrolls the list to the position which was displayed before the device rotation.
+     *
+     * @param position  the position of the first visible item.
+     */
+    private void restoreListToOriginState(int position) {
+        mLayoutManager.scrollToPositionWithOffset(position, 0);
     }
 
     /**
@@ -139,15 +164,15 @@ public class MainActivity extends AppCompatActivity
 
         if (isTablet) {
             if (orientation == Configuration.ORIENTATION_PORTRAIT) {
-                layoutManager.setSpanCount(mediumSpanCount);
+                mLayoutManager.setSpanCount(mediumSpanCount);
             } else {
-                layoutManager.setSpanCount(largeSpanCount);
+                mLayoutManager.setSpanCount(largeSpanCount);
             }
         } else {
             if (orientation == Configuration.ORIENTATION_PORTRAIT) {
-                layoutManager.setSpanCount(smallSpanCount);
+                mLayoutManager.setSpanCount(smallSpanCount);
             } else {
-                layoutManager.setSpanCount(mediumSpanCount);
+                mLayoutManager.setSpanCount(mediumSpanCount);
             }
         }
     }

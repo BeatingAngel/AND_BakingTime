@@ -21,6 +21,7 @@ import android.widget.ScrollView;
 import android.widget.TextView;
 
 import com.goldencrow.android.bakingtime.entities.Step;
+import com.google.android.exoplayer2.C;
 import com.google.android.exoplayer2.DefaultLoadControl;
 import com.google.android.exoplayer2.ExoPlayerFactory;
 import com.google.android.exoplayer2.LoadControl;
@@ -163,12 +164,13 @@ public class RecipeMasterDetailFragment extends Fragment {
     /**
      * The position in which the player from the video is currently located at (minute).
      */
-    Long mVideoPosition;
+    long mVideoPosition = C.TIME_UNSET;
 
     /**
-     * The state in which the player is in (PLAY, PAUSE, STOPPED,...)
+     * The position from where the player will resume after a state change.
+     * For example: Leave app and reopen app.
      */
-    Integer mVideoState;
+    long mResumePosition = C.TIME_UNSET;
 
     /**
      * is TRUE if the current device is a tablet and FALSE if it is a phone.
@@ -226,36 +228,35 @@ public class RecipeMasterDetailFragment extends Fragment {
 
         // TRUE if the orientation changed. See #onSaveInstanceState()
         if (savedInstanceState != null) {
-            mSteps = (Step[]) savedInstanceState.getParcelableArray(STEPS_KEY);
+            Step[] steps = (Step[]) savedInstanceState.getParcelableArray(STEPS_KEY);
+            if (steps != null) {
+                mSteps = steps;
+            }
             mPos = savedInstanceState.getInt(POS_KEY);
             mVideoPosition = savedInstanceState.getLong(VID_POS_KEY);
-            mVideoState = savedInstanceState.getInt(VID_STATE_KEY);
-        }
-
-        if (mExoPlayer == null) {
-            initializePlayer();
-            updateUI();
-        } else if (mVideoPosition != null && mVideoState != null) {
-            mExoPlayer.seekTo(mVideoPosition);
-            if (mVideoState == PlaybackState.STATE_PAUSED || mVideoState == PlaybackState.STATE_STOPPED) {
-                mExoPlayer.setPlayWhenReady(false);
-            } else {
-                mExoPlayer.setPlayWhenReady(true);
-            }
         }
 
         return view;
     }
 
-    /**
-     * If the fragment is removed, then clean up the ExoPlayer.
-     */
+    //region ExoPlayer resource management
+
     @Override
-    public void onDetach() {
-        super.onDetach();
+    public void onResume() {
+        super.onResume();
+
+        initializePlayer();
+        updateUI();
+    }
+
+    @Override
+    public void onPause() {
+        super.onPause();
 
         releasePlayer();
     }
+
+    //endregion
 
     /**
      * If the orientation changes, save the important variables to recreate the current environment
@@ -269,8 +270,7 @@ public class RecipeMasterDetailFragment extends Fragment {
 
         outState.putParcelableArray(STEPS_KEY, mSteps);
         outState.putInt(POS_KEY, mPos);
-        outState.putLong(VID_POS_KEY, mExoPlayer.getCurrentPosition());
-        outState.putInt(VID_STATE_KEY, mExoPlayer.getPlaybackState());
+        outState.putLong(VID_POS_KEY, mResumePosition);
     }
 
     /**
@@ -421,24 +421,33 @@ public class RecipeMasterDetailFragment extends Fragment {
         MediaSource mediaSource = new ExtractorMediaSource(uri, new DefaultDataSourceFactory(
                 getContext(), userAgent),
                 new DefaultExtractorsFactory(), null, null);
-        mExoPlayer.prepare(mediaSource);
 
-        boolean playWhenReady = true;
-        if (mVideoPosition != null && mVideoState != null) {
+        if (mVideoPosition != C.TIME_UNSET) {
             mExoPlayer.seekTo(mVideoPosition);
-            if (mVideoState == PlaybackState.STATE_PAUSED || mVideoState == PlaybackState.STATE_STOPPED) {
-                playWhenReady = false;
-            }
         }
-        mExoPlayer.setPlayWhenReady(playWhenReady);
+
+        mExoPlayer.prepare(mediaSource, mVideoPosition == C.TIME_UNSET, false);
+
+        mExoPlayer.setPlayWhenReady(true);
     }
 
     /**
      * cleans up the ExoPlayer.
      */
     private void releasePlayer() {
-        mExoPlayer.stop();
-        mExoPlayer.release();
-        mExoPlayer = null;
+        if (mExoPlayer != null) {
+            setResumePosition();
+
+            mExoPlayer.stop();
+            mExoPlayer.release();
+            mExoPlayer = null;
+        }
+    }
+
+    /**
+     * saves the video position from where the video will resume after the state change.
+     */
+    private void setResumePosition() {
+        mResumePosition = Math.max(0, mExoPlayer.getCurrentPosition());
     }
 }

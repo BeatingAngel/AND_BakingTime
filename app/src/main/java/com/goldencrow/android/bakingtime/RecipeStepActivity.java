@@ -17,6 +17,8 @@ import java.util.ArrayList;
  */
 public class RecipeStepActivity extends AppCompatActivity {
 
+    private final String DETAIL_FRAGMENT_TAG = RecipeMasterDetailFragment.class.getCanonicalName();
+
     /**
      * Key used to store the array of recipe steps in.
      * <p>
@@ -54,10 +56,16 @@ public class RecipeStepActivity extends AppCompatActivity {
                 pos = savedInstanceState.getInt(RECIPE_STEP_POS_KEY);
             }
 
-            mMasterDetailFragment = new RecipeMasterDetailFragment();
-            Step[] stepArr = new Step[stepsList.size()];
-            stepArr = stepsList.toArray(stepArr);
-            mMasterDetailFragment.setData(stepArr, pos);
+            // code from reviewer comment:
+            mMasterDetailFragment = (RecipeMasterDetailFragment) getSupportFragmentManager()
+                    .findFragmentByTag(DETAIL_FRAGMENT_TAG);
+            if (mMasterDetailFragment == null) {
+                mMasterDetailFragment = new RecipeMasterDetailFragment();
+                Step[] stepArr = new Step[stepsList.size()];
+                stepArr = stepsList.toArray(stepArr);
+                mMasterDetailFragment.setData(stepArr, pos);
+            }
+            // ---------------------------
 
             changeDetailFragment(mMasterDetailFragment);
         }
@@ -79,7 +87,7 @@ public class RecipeStepActivity extends AppCompatActivity {
     public void changeDetailFragment(RecipeMasterDetailFragment recipeMasterDetailFragment) {
         getSupportFragmentManager()
                 .beginTransaction()
-                .replace(R.id.master_detail_container, recipeMasterDetailFragment)
+                .replace(R.id.master_detail_container, recipeMasterDetailFragment, DETAIL_FRAGMENT_TAG)
                 .commit();
     }
 }

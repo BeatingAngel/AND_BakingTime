@@ -28,6 +28,12 @@ import com.goldencrow.android.bakingtime.entities.Step;
 public class RecipeMasterListFragment extends Fragment {
 
     /**
+     * Key used to store the position of the first visible item in the list in.
+     * This is used to restore the list after a device rotation to its original state.
+     */
+    public static final String LIST_POSITION_KEY = "list_pos";
+
+    /**
      * The callback method which the parent activity should have so that it can handle the click
      * on a step which happens in here.
      */
@@ -96,6 +102,10 @@ public class RecipeMasterListFragment extends Fragment {
         removeLoadingIndicator();
         adapter.setSteps(mRecipe.getSteps());
 
+        if (savedInstanceState != null) {
+            restoreListToOrigin(savedInstanceState.getInt(LIST_POSITION_KEY));
+        }
+
         return rootView;
     }
 
@@ -109,7 +119,11 @@ public class RecipeMasterListFragment extends Fragment {
     public void onSaveInstanceState(Bundle outState) {
         super.onSaveInstanceState(outState);
 
+        int firstVisiblePosition = ((LinearLayoutManager)mRecipeStepsRv.getLayoutManager())
+                .findFirstVisibleItemPosition();
+
         outState.putParcelable(RecipeDetailActivity.RECIPE_KEY, mRecipe);
+        outState.putInt(LIST_POSITION_KEY, firstVisiblePosition);
     }
 
     /**
@@ -127,6 +141,16 @@ public class RecipeMasterListFragment extends Fragment {
         } catch (ClassCastException e) {
             throw new ClassCastException(context.toString() + " must implement OnStepClickListener.");
         }
+    }
+
+    /**
+     * Scrolls the list to the position which was displayed before the device rotation.
+     *
+     * @param position  the position of the first visible item.
+     */
+    public void restoreListToOrigin(int position) {
+        ((LinearLayoutManager)mRecipeStepsRv.getLayoutManager())
+                .scrollToPositionWithOffset(position, 0);
     }
 
     /**
