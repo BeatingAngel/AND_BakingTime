@@ -80,7 +80,7 @@ public class RecipeMasterDetailFragment extends Fragment {
     /**
      * Key to the stored variables of the state of the video.
      */
-    private static final String VID_STATE_KEY = "video_state_key";
+    private static final String VID_PLAY_WHEN_READY = "video_play_when_ready_key";
 
     /**
      * The UI Element which displays a video, thumbnail or image additionally to the recipe step
@@ -173,6 +173,11 @@ public class RecipeMasterDetailFragment extends Fragment {
     long mResumePosition = C.TIME_UNSET;
 
     /**
+     * The state which the video has before the state change.
+     */
+    boolean mPlayWhenReady = true;
+
+    /**
      * is TRUE if the current device is a tablet and FALSE if it is a phone.
      */
     boolean mIsTablet = false;
@@ -234,6 +239,7 @@ public class RecipeMasterDetailFragment extends Fragment {
             }
             mPos = savedInstanceState.getInt(POS_KEY);
             mVideoPosition = savedInstanceState.getLong(VID_POS_KEY);
+            mPlayWhenReady = savedInstanceState.getBoolean(VID_PLAY_WHEN_READY);
         }
 
         return view;
@@ -271,6 +277,7 @@ public class RecipeMasterDetailFragment extends Fragment {
         outState.putParcelableArray(STEPS_KEY, mSteps);
         outState.putInt(POS_KEY, mPos);
         outState.putLong(VID_POS_KEY, mResumePosition);
+        outState.putBoolean(VID_PLAY_WHEN_READY, mPlayWhenReady);
     }
 
     /**
@@ -428,7 +435,7 @@ public class RecipeMasterDetailFragment extends Fragment {
 
         mExoPlayer.prepare(mediaSource, mVideoPosition == C.TIME_UNSET, false);
 
-        mExoPlayer.setPlayWhenReady(true);
+        mExoPlayer.setPlayWhenReady(mPlayWhenReady);
     }
 
     /**
@@ -436,7 +443,7 @@ public class RecipeMasterDetailFragment extends Fragment {
      */
     private void releasePlayer() {
         if (mExoPlayer != null) {
-            setResumePosition();
+            setRestoreVideoVariables();
 
             mExoPlayer.stop();
             mExoPlayer.release();
@@ -447,7 +454,8 @@ public class RecipeMasterDetailFragment extends Fragment {
     /**
      * saves the video position from where the video will resume after the state change.
      */
-    private void setResumePosition() {
+    private void setRestoreVideoVariables() {
         mResumePosition = Math.max(0, mExoPlayer.getCurrentPosition());
+        mPlayWhenReady = mExoPlayer.getPlayWhenReady();
     }
 }
